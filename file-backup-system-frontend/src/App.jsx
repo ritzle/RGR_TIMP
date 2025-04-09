@@ -2,7 +2,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/auth/AuthPage";
-import HomePage from "./pages/Home/Home";
+import HomePage from "./pages/Home/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -24,4 +24,3 @@ function App() {
 }
 
 export default App;
-
