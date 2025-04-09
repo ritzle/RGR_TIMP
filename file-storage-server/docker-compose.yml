@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  storage-server:
+    build: .
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./storage:/app/storage
+    restart: unless-stopped
