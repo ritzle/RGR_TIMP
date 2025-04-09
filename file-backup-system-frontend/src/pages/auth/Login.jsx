@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../../styles/Form.module.css";
+import styles from "./Login.module.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +12,6 @@ function Login() {
   const handleLogin = async () => {
     const newErrors = {};
 
-    // Проверка на заполненность полей
     if (!email.trim()) {
       newErrors.email = "Введите e-mail";
     }
@@ -23,7 +22,6 @@ function Login() {
     setErrors(newErrors);
     setServerError("");
 
-    // Если есть ошибки — не отправляем запрос
     if (Object.keys(newErrors).length > 0) {
       return;
     }
@@ -41,7 +39,15 @@ function Login() {
 
       if (response.ok) {
         localStorage.setItem("isAuthenticated", "true");
-        navigate("/main");
+
+
+        localStorage.setItem("user", JSON.stringify({
+          firstName: data.user.firstName,
+          lastName: data.user.lastName,
+          email: data.user.email
+        }));
+
+        navigate("/home");
       } else {
         const message = data.message?.toLowerCase();
 

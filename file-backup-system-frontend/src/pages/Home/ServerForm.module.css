@@ -1,0 +1,50 @@
+.serverForm {
+  width: 100%;
+  background-color: #2a3a5a;
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: white;
+  box-sizing: border-box;
+}
+
+.heading {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.input {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #3e5175;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.button {
+  padding: 10px;
+  border-radius: 20px;
+  background: #2dd3b7;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.button:hover {
+  background: #21a38e;
+}

@@ -2,48 +2,44 @@ import React, { useState } from "react";
 import Login from "./Login";
 import Register from "./Register";
 
-import pageStyles from "../../styles/AuthPage.module.css";
-import leftStyles from "../../styles/LeftPanel.module.css";
-import rightStyles from "../../styles/RightPanel.module.css";
+import styles from "./AuthPage.module.css";
 
 const AuthPage = () => {
-
   localStorage.setItem("isAuthenticated", "false");
-
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className={pageStyles.page}>
+    <div className={styles.page}>
       {/* Слой фона */}
-      <div className={pageStyles.background}></div>
+      <div className={styles.background}></div>
 
       {/* Центрированный контейнер */}
-      <div className={pageStyles.authContainer}>
-        <div className={pageStyles.authWrapper}>
+      <div className={styles.authContainer}>
+        <div className={styles.authWrapper}>
           {/* Левая часть */}
-          <div className={leftStyles.splitLeft}>
-            <div className={leftStyles.rocket}>🚀</div>
-            <h2 className={leftStyles.description}>File backup system</h2>
+          <div className={styles.splitLeft}>
+            <div className={styles.rocket}>🚀</div>
+            <h2 className={styles.description}>Система резервного копирования для серверов</h2>
           </div>
 
           {/* Правая часть */}
-          <div className={rightStyles.splitRight}>
-            <div className={rightStyles.formSwitch}>
+          <div className={styles.splitRight}>
+            <div className={styles.formSwitch}>
               <span
-                className={isLogin ? rightStyles.active : ""}
+                className={isLogin ? styles.active : ""}
                 onClick={() => setIsLogin(true)}
               >
                 Sign In
               </span>
               <span
-                className={!isLogin ? rightStyles.active : ""}
+                className={!isLogin ? styles.active : ""}
                 onClick={() => setIsLogin(false)}
               >
                 Sign Up
               </span>
             </div>
 
-            <div className={rightStyles.formContainer}>
+            <div className={styles.formContainer}>
               {isLogin ? <Login /> : <Register />}
             </div>
           </div>

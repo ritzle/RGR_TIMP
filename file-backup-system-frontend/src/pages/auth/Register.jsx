@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "./Modal.jsx";
-import styles from "../../styles/Form.module.css";
+import styles from "./Register.module.css";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -16,7 +16,6 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
 
-
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: "" }));
@@ -28,37 +27,37 @@ function Register() {
 
   const handleRegister = async () => {
     const newErrors = {};
-  
+
     if (!formData.firstName.trim()) newErrors.firstName = "Введите имя";
     if (!formData.lastName.trim()) newErrors.lastName = "Введите фамилию";
-  
+
     if (!formData.email.trim()) {
       newErrors.email = "Введите email";
     } else if (!validateEmail(formData.email.trim())) {
       newErrors.email = "Неверный формат email";
     }
-  
+
     if (!formData.password.trim()) newErrors.password = "Введите пароль";
-  
+
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
-  
+
     try {
-      setLoading(true); // 👈 запуск индикатора
-  
+      setLoading(true);
+
       const response = await fetch("http://localhost:5000/api/register-init", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setShowModal(true);
       } else {
         const message = data.message?.toLowerCase();
-  
+
         if (message?.includes("используется")) {
           setFormData((prev) => ({ ...prev, email: "" }));
           setErrors({ email: "Этот e-mail уже зарегистрирован. Попробуйте войти." });
@@ -72,10 +71,9 @@ function Register() {
       console.error("Ошибка:", error);
       setErrors({ email: "Сервер недоступен. Попробуйте позже." });
     } finally {
-      setLoading(false); // 👈 стоп индикатора
+      setLoading(false);
     }
   };
-  
 
   const handleVerify = async () => {
     try {
@@ -104,9 +102,7 @@ function Register() {
           onChange={(e) => handleInputChange("firstName", e.target.value)}
           className={`${styles.input} ${errors.firstName ? styles.error : ""}`}
         />
-        {errors.firstName && (
-          <div className={styles.errorMessage}>{errors.firstName}</div>
-        )}
+        {errors.firstName && <div className={styles.errorMessage}>{errors.firstName}</div>}
 
         <input
           placeholder="Last Name"
@@ -114,9 +110,7 @@ function Register() {
           onChange={(e) => handleInputChange("lastName", e.target.value)}
           className={`${styles.input} ${errors.lastName ? styles.error : ""}`}
         />
-        {errors.lastName && (
-          <div className={styles.errorMessage}>{errors.lastName}</div>
-        )}
+        {errors.lastName && <div className={styles.errorMessage}>{errors.lastName}</div>}
 
         <input
           placeholder="E-mail"
@@ -143,14 +137,9 @@ function Register() {
           </div>
         )}
 
-<button
-  className={styles.button}
-  onClick={handleRegister}
-  disabled={loading}
->
-  {loading ? "Отправка..." : "Sign Up"}
-</button>
-
+        <button className={styles.button} onClick={handleRegister} disabled={loading}>
+          {loading ? "Отправка..." : "Sign Up"}
+        </button>
       </div>
 
       {showModal && (
