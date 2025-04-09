@@ -84,7 +84,8 @@ def login():
         "user": {
             "id": user.id,
             "email": user.email,
-            "name": f"{user.first_name} {user.last_name}"
+            "firstName": user.first_name,
+            "lastName": user.last_name
         }
     })
 
