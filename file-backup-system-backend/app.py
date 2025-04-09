@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS 
 from auth import auth_bp 
+from HomePage import HomePage_bp
 from config import Config
 from models import db
 
@@ -11,6 +12,7 @@ db.init_app(app)
 CORS(app)  
 
 app.register_blueprint(auth_bp)
+app.register_blueprint(HomePage_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)
