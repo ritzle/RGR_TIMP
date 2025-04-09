@@ -48,3 +48,14 @@
 .button:hover {
   background: #21a38e;
 }
+
+.errorText {
+  color: #ff4d4d;
+  font-size: 0.9rem;
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
+
+.error {
+  border: 1px solid #e74c3c;
+}

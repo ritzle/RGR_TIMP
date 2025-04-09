@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Sidebar.module.css";
 import ServerForm from "./ServerForm";
 
-const Sidebar = ({ name, ip, setName, setIp, handleAddServer }) => {
+const Sidebar = ({ name, ip, setName, setIp, handleAddServer, ipError }) => {
   return (
     <aside className={styles.sidebar}>
       <ServerForm
@@ -10,10 +10,11 @@ const Sidebar = ({ name, ip, setName, setIp, handleAddServer }) => {
         ip={ip}
         setName={setName}
         setIp={setIp}
+        ipError={ipError}
         handleAddServer={handleAddServer}
       />
       <div className={styles.emptyPanel}>
-        {/* Здесь можно разместить статистику, фильтры и т.д. */}
+        <h2 className={styles.description}>Тут могла быть ваша реклама</h2>
       </div>
     </aside>
   );

@@ -20,3 +20,7 @@
     text-align: center;
   }
   
+  .description {
+    font-size: 2rem;
+    max-width: 250px;
+  }

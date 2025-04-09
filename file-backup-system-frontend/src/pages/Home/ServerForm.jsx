@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ServerForm.module.css";
 
-const ServerForm = ({ name, ip, setName, setIp, handleAddServer }) => {
+const ServerForm = ({ name, ip, setName, setIp, handleAddServer, ipError }) => {
   return (
     <div className={styles.serverForm}>
       <h3 className={styles.heading}>Добавить сервер</h3>
@@ -17,11 +17,13 @@ const ServerForm = ({ name, ip, setName, setIp, handleAddServer }) => {
         placeholder="IP адрес"
         value={ip}
         onChange={(e) => setIp(e.target.value)}
-        className={styles.input}
+        className={`${styles.input} ${ipError ? styles.error : ""}`}
       />
+      {ipError && <div className={styles.errorText}>{ipError}</div>}
       <button onClick={handleAddServer} className={styles.button}>Добавить</button>
     </div>
   );
 };
+
 
 export default ServerForm;
