@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  height: 100vh;
+  background-color: #202c44;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.dimmed::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 900;
+}
+
+.mainContent.dimmed::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 0;
+}
