@@ -1,32 +1,158 @@
+
+
+/* Основные стили */
 .sidebar {
-    width: 25%;
-    background-color: #2a3a5a;
-    padding: 30px;
-    border-right: 2px solid #3e5175;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .sidebar h2 {
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-  }
-  
-  .backButton {
-    background: none;
-    border: none;
-    color: #2dd3b7;
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 20px;
-    cursor: pointer;
-    text-align: left;
-    padding: 0;
-    transition: color 0.3s ease;
-  }
-  
-  .backButton:hover {
-    color: #26bba3;
-  }
-  
+  width: 25%;
+  min-width: 280px;
+  background: linear-gradient(145deg, #2a3a5a 0%, #1e2a3e 100%);
+  padding: 30px;
+  border-right: 1px solid rgba(62, 81, 117, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform;
+  z-index: 10;
+}
+
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #2dd3b7, #1fa5e8);
+  z-index: -1;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: white;
+  position: relative;
+  padding-bottom: 12px;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+}
+
+.sidebar h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #2dd3b7, #1fa5e8);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.sidebar:hover h2::after {
+  width: 70px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #2dd3b7;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  cursor: pointer;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+  will-change: transform;
+}
+
+.backButton:hover {
+  color: #26bba3;
+  transform: translate3d(-3px, 0, 0);
+  background: rgba(45, 211, 183, 0.1);
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(0.3s + (var(--order) * 0.1s));
+  will-change: transform, opacity;
+}
+
+.infoLabel {
+  font-size: 0.9rem;
+  color: #a0a8c0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.infoValue {
+  font-size: 1.1rem;
+  color: white;
+  padding: 10px 15px;
+  background: rgba(62, 81, 117, 0.4);
+  border-radius: 8px;
+  border-left: 3px solid #2dd3b7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.infoValue:hover {
+  transform: translate3d(3px, 0, 0);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.statusIndicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 10px;
+}
+
+.online {
+  color: #2dd3b7;
+}
+
+.online .statusIndicator {
+  background-color: #2dd3b7;
+  box-shadow: 0 0 10px #2dd3b7;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.offline {
+  color: #ff6b6b;
+}
+
+.offline .statusIndicator {
+  background-color: #ff6b6b;
+  box-shadow: 0 0 10px #ff6b6b;
+}
+
+.pending {
+  color: #feca57;
+}
+
+.pending .statusIndicator {
+  background-color: #feca57;
+  box-shadow: 0 0 10px #feca57;
+  animation: pulse 1.5s infinite ease-in-out;
+}

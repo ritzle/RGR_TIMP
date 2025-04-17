@@ -1,172 +1,170 @@
+.wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.globalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  gap: 20px;
+}
+
 .mainContent {
-    flex: 1;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    overflow-y: auto;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .mainContent.dimmed::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 0;
-  }
-  
-  
-  .mainContent h2 {
-    font-size: 1.6rem;
-    margin-bottom: 10px;
-  }
-  
-  .actions {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-  }
-  
-  .actions button {
-    background-color: #2dd3b7;
-    color: white;
-    font-weight: bold;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .actions button:hover {
-    background-color: #26bba3;
-  }
-  
-  /* Оверлей и модальное окно */
-  .overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .modal {
-    background-color: #2a3a5a;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    width: 90%;
-    max-width: 400px;
-    color: white;
-  }
-  
-  .modalTitle {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-    color: #ffffff;
-  }
-  
-  .modalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .confirmBtn,
-  .cancelBtn {
-    padding: 10px 18px;
-    border-radius: 20px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .confirmBtn {
-    background-color: #2dd3b7;
-    color: white;
-  }
-  
-  .confirmBtn:hover {
-    background-color: #26bba3;
-  }
-  
-  .cancelBtn {
-    background-color: transparent;
-    color: #ccc;
-    border: 1px solid #ccc;
-  }
-  
-  .cancelBtn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .textarea {
-    width: 100%;
-    min-height: 100px;
-    background-color: #3e5175;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    color: white;
-    resize: none;
-    font-family: inherit;
-    font-size: 1rem;
-  }
-  
-  .dimmed {
-    position: relative;
-  }
-  
-  .dimmed::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 0;
-  }
-  
-  .dimOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 0;
-  }
-  
-  .mainContentWrapper {
-    position: relative;
-    z-index: 1;
-  }
-  
-  .mainContent {
-    position: relative;
-    z-index: 1;
-  }
-  
-  .wrapper {
-    position: relative;
-  }
-  
-  .dimOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 0;
-  }
-  
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 95%;
+  margin: 0 auto;
+  background-color: #2a3a5a;
+  border-radius: 10px;
+  position: relative;
+  z-index: 1;
+  min-height: fit-content;
+}
+
+.mainContent h2 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 15px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.actions button {
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 180px;
+}
+
+.actions button:not(.disabledButton):not(.cancelButton) {
+  background-color: #2dd3b7;
+}
+
+.actions button:not(.disabledButton):not(.cancelButton):hover {
+  background-color: #26bba3;
+}
+
+.disabledButton {
+  background-color: #3e5175;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.cancelButton {
+  background-color: #f53e3e;
+}
+
+.cancelButton:hover {
+  background-color: #c72626;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #2a3a5a;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  width: 90%;
+  max-width: 400px;
+  color: white;
+}
+
+.modalTitle {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  color: #ffffff;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.confirmBtn,
+.cancelBtn {
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  min-width: 120px;
+  text-align: center;
+}
+
+.confirmBtn {
+  background: linear-gradient(135deg, #2dd3b7, #1fa5e8);
+  color: white;
+  border: none;
+}
+
+.confirmBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(45, 211, 183, 0.4);
+}
+
+.cancelBtn {
+  background: transparent;
+  color: #ccc;
+  border: 1px solid #ccc;
+}
+
+.cancelBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: white;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 100px;
+  background-color: #3e5175;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  resize: none;
+  font-family: inherit;
+  font-size: 1rem;
+}

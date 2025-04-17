@@ -1,102 +1,96 @@
 .backupListContainer {
-    padding: 10px;
-    background-color: #2a3a5a;
-    border-radius: 12px;
-    max-height: 350px;
-    overflow-y: auto;
-    max-width: 900px;
-  }
-  
-  .mainContent {
-    width: 100%;
-    max-width: 1000px; /* или auto, если нужно на всю */
-    margin: 0 auto;
-  }
-  
+  padding: 15px;
+  background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-out;
+}
 
-  /* Область со скроллом */
-  .scrollArea {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 350px;
-    overflow-y: auto;
-  
-    /* Скроллбар для Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: #2dd3b7 #2a3a5a;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.scrollArea {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 5px;
+  scrollbar-width: thin;
+  scrollbar-color: #2dd3b7 #2a3a5a;
+}
+
+.scrollArea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollArea::-webkit-scrollbar-track {
+  background: #2a3a5a;
+  border-radius: 10px;
+}
+
+.scrollArea::-webkit-scrollbar-thumb {
+  background-color: #2dd3b7;
+  border-radius: 10px;
+  border: 2px solid #2a3a5a;
+}
+
+.scrollArea::-webkit-scrollbar-thumb:hover {
+  background-color: #26bba3;
+}
+
+.backupItem {
+  background: rgba(62, 81, 117, 0.5);
+  padding: 15px;
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  border-left: 3px solid transparent;
+  animation: fadeIn 0.4s ease-out forwards;
+  animation-delay: calc(var(--order) * 0.05s);
+}
+
+.selectable {
+  cursor: pointer;
+}
+
+.selectable:hover {
+  background: rgba(62, 81, 117, 0.7);
+  transform: translateX(5px);
+}
+
+.selected {
+  background: rgba(45, 211, 183, 0.15);
+  border-left: 3px solid #2dd3b7;
+  box-shadow: 0 5px 15px rgba(45, 211, 183, 0.2);
+}
+
+.backupName {
+  margin: 0;
+  font-weight: 600;
+  color: white;
+  font-size: 1.05rem;
+}
+
+.backupComment {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  color: #bbbbbb;
+  line-height: 1.5;
+}
+
+.noBackups {
+  color: #ccc;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
   }
-  
-  /* Скроллбар для Chrome, Edge */
-  .scrollArea::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .scrollArea::-webkit-scrollbar-track {
-    background: #2a3a5a;
-    border-radius: 10px;
-  }
-  
-  .scrollArea::-webkit-scrollbar-thumb {
-    background-color: #2dd3b7;
-    border-radius: 10px;
-    border: 2px solid #2a3a5a;
-  }
-  
-  .scrollArea::-webkit-scrollbar-thumb:hover {
-    background-color: #26bba3;
-  }
-  
-  /* Элемент бэкапа */
-  .backupItem {
-    background: #3e5175;
-    padding: 12px;
-    border-radius: 10px;
-    transition: background 0.3s, border 0.3s;
-  }
-  
-  /* Ховер по бэкапу, только если он выбираемый */
-  .selectable {
-    cursor: pointer;
-  }
-  
-  .selectable:hover {
-    background: #4b6190;
-  }
-  
-  /* Активный выбранный элемент */
-  .selected {
-    background-color: #2dd3b7;
-    color: black;
-    border: 2px solid #2dd3b7;
-  }
-  
-  /* Название бэкапа */
-  .backupName {
-    margin: 0;
-    font-weight: bold;
-    color: white;
-  }
-  
-  /* Комментарий */
-  .backupComment {
-    margin: 5px 0 0;
-    font-size: 0.95rem;
-    color: #bbbbbb;
-  }
-  
-  /* Если список пустой */
-  .noBackups {
-    color: #ccc;
-    font-style: italic;
-  }
-  
-  .selectable {
-    cursor: pointer;
-  }
-  
-  .selected {
-    border: 2px solid #2dd3b7;
-    background: #2dd3b730;
-  }
-  
+}
