@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/auth/AuthPage";
 import HomePage from "./pages/Home/HomePage";
-import ServerDetail from "./pages/ServerDetail/ServerDetail";
+import ServerDetailPage from "./pages/ServerDetail/ServerDetailPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -21,10 +21,10 @@ function App() {
         />
 
         <Route
-          path="/server/:name/:ip"
+          path="/server/:name/"
           element={
             <ProtectedRoute>
-              <ServerDetail />
+              <ServerDetailPage/>
             </ProtectedRoute>
           }
         />
