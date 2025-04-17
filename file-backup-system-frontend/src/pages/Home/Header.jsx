@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 
+import Profile from './icons/profile.png';
+
 const Header = () => {
   const [showProfile, setShowProfile] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [user, setUser] = useState({ firstName: "", lastName: "", email: "" });
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(user);
@@ -33,8 +36,7 @@ const Header = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (panelRef.current && !panelRef.current.contains(event.target)) {
-        setShowProfile(false);
-        setIsEditing(false);
+        closePanel();
       }
     };
     if (showProfile) {
@@ -44,6 +46,20 @@ const Header = () => {
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showProfile]);
+
+  const openPanel = () => {
+    setShowProfile(true);
+    setIsClosing(false);
+  };
+
+  const closePanel = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setShowProfile(false);
+      setIsEditing(false);
+      setIsClosing(false);
+    }, 300);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -89,40 +105,50 @@ const Header = () => {
       alert("Сервер недоступен");
     }
   };
-  
 
   return (
     <>
       <header className={styles.header}>
         <div className={styles.logo}>File Backup System</div>
-        <div className={styles.profileIcon} onClick={() => setShowProfile(true)}>
-          👤
+        <div className={styles.profileIcon} onClick={openPanel}>
+          <img src={Profile} alt="Hide password" width="40" height="40" />
         </div>
       </header>
 
       {showProfile && (
         <>
-          <div className={styles.overlay}></div>
-          <div ref={panelRef} className={styles.profilePanel}>
+          <div className={`${styles.overlay} ${isClosing ? styles.closing : ''}`}></div>
+          <div 
+            ref={panelRef} 
+            className={`${styles.profilePanel} ${isClosing ? styles.closing : ''}`}
+          >
             <div className={styles.panelContent}>
               <h3>Профиль</h3>
 
               {isEditing ? (
                 <>
-                  <input
-                    type="text"
-                    value={editedUser.firstName}
-                    onChange={(e) => handleInputChange("firstName", e.target.value)}
-                    className={styles.input}
-                    placeholder="Имя"
-                  />
-                  <input
-                    type="text"
-                    value={editedUser.lastName}
-                    onChange={(e) => handleInputChange("lastName", e.target.value)}
-                    className={styles.input}
-                    placeholder="Фамилия"
-                  />
+                  <div className={styles.inputContainer}>
+                    <input
+                      type="text"
+                      id="firstName"
+                      value={editedUser.firstName}
+                      onChange={(e) => handleInputChange("firstName", e.target.value)}
+                      className={styles.input}
+                      placeholder=" "
+                    />
+                    <label htmlFor="firstName" className={styles.inputLabel}>Имя</label>
+                  </div>
+                  <div className={styles.inputContainer}>
+                    <input
+                      type="text"
+                      id="lastName"
+                      value={editedUser.lastName}
+                      onChange={(e) => handleInputChange("lastName", e.target.value)}
+                      className={styles.input}
+                      placeholder=" "
+                    />
+                    <label htmlFor="lastName" className={styles.inputLabel}>Фамилия</label>
+                  </div>
                 </>
               ) : (
                 <>
@@ -133,12 +159,14 @@ const Header = () => {
 
               <p><strong>E-mail:</strong> {user.email}</p>
 
-              {isEditing ? (
-                <button className={styles.saveButton} onClick={handleSave}>Сохранить</button>
-              ) : (
-                <button className={styles.editButton} onClick={() => setIsEditing(true)}>Редактировать</button>
-              )}
-              <button className={styles.logoutButton} onClick={handleLogout}>Выход</button>
+              <div className={styles.buttonGroup}>
+                {isEditing ? (
+                  <button className={styles.saveButton} onClick={handleSave}>Сохранить</button>
+                ) : (
+                  <button className={styles.editButton} onClick={() => setIsEditing(true)}>Редактировать</button>
+                )}
+                <button className={styles.logoutButton} onClick={handleLogout}>Выход</button>
+              </div>
             </div>
           </div>
         </>

@@ -1,34 +1,46 @@
 .serverCard {
-    background-color: #3e5175;
-    padding: 24px;
-    border-radius: 20px;
-    flex: 1 1 calc(33.333% - 20px);
-    min-width: 280px;
-    max-width: 350px;
-    cursor: pointer;
-    transition: background 0.3s;
-    box-sizing: border-box;
-    overflow: hidden;
+  background: linear-gradient(145deg, #3e5175, #2a3a5a);
+  padding: 25px;
+  border-radius: 16px;
+  flex: 1 1 calc(33.333% - 20px);
+  min-width: 280px;
+  max-width: 350px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+.serverCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(145deg, #4b6190, #3e5175);
+}
+
+.title {
+  margin: 0 0 15px;
+  font-size: 1.4rem;
+  color: white;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.address {
+  margin: 0;
+  font-size: 1rem;
+  color: #bbbbbb;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .serverCard {
+    max-width: 100%;
   }
-  
-  .serverCard:hover {
-    background-color: #4b6190;
-  }
-  
-  .title {
-    margin: 0 0 12px;
-    font-size: 1.4rem;
-    color: #ffffff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .ip {
-    margin: 0;
-    font-size: 1rem;
-    color: #dddddd;
-    word-break: break-all;
-    overflow-wrap: break-word;
-  }
-  
+}

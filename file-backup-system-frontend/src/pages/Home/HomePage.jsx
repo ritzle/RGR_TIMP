@@ -8,10 +8,9 @@ import ServerList from "./ServerList";
 const HomePage = () => {
   const [servers, setServers] = useState([]);
   const [name, setName] = useState("");
-  const [ip, setIp] = useState("");
+  const [address, setAddress] = useState("");
+  const [addressError, setAddressError] = useState("");
   const navigate = useNavigate();
-
-  const [ipError, setIpError] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -26,34 +25,35 @@ const HomePage = () => {
   }, []);
 
   const handleAddServer = async () => {
-    if (name && ip) {
+    if (name && address) {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         if (!user || !user.email) {
           alert("Пользователь не найден");
           return;
         }
-  
+
         const response = await fetch("http://localhost:5000/api/add-server", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name,
-            ip_address: ip,
+            ip_address: address,
             email: user.email,
+            id_user: user.id
           }),
         });
-  
+
         const data = await response.json();
-  
+
         if (response.ok) {
-          setServers([...servers, { name, ip }]);
+          setServers([...servers, { name, ip: address }]);
           setName("");
-          setIp("");
-          setIpError(""); // очистить ошибку
+          setAddress("");
+          setAddressError("");
         } else if (data.message?.toLowerCase().includes("ip")) {
-          setIp("");
-          setIpError("Этот IP уже зарегистрирован");
+          setAddress("");
+          setAddressError("Этот адрес уже зарегистрирован");
         } else {
           alert("Ошибка: " + data.message);
         }
@@ -63,11 +63,14 @@ const HomePage = () => {
       }
     }
   };
-  
-  
 
   const handleCardClick = (server) => {
-    navigate(`/server/${encodeURIComponent(server.name)}/${encodeURIComponent(server.ip)}`);
+    navigate(`/server/${encodeURIComponent(server.name)}`, {
+      state: {
+        address: server.ip,
+        id: server.id,
+      }
+    });
   };
   
 
@@ -77,11 +80,11 @@ const HomePage = () => {
       <div className={styles.mainContent}>
         <Sidebar
           name={name}
-          ip={ip}
+          address={address}
           setName={setName}
-          setIp={setIp}
+          setIp={setAddress}
           handleAddServer={handleAddServer}
-          ipError={ipError} 
+          ipError={addressError}
         />
         <ServerList servers={servers} handleCardClick={handleCardClick} />
       </div>

@@ -2,16 +2,16 @@ import React from "react";
 import styles from "./Sidebar.module.css";
 import ServerForm from "./ServerForm";
 
-const Sidebar = ({ name, ip, setName, setIp, handleAddServer, ipError }) => {
+const Sidebar = ({ name, address, setName, setIp, handleAddServer, ipError }) => {
   return (
     <aside className={styles.sidebar}>
       <ServerForm
         name={name}
-        ip={ip}
+        address={address}
         setName={setName}
-        setIp={setIp}
-        ipError={ipError}
+        setAddress={setIp} // Передаем setIp как setAddress
         handleAddServer={handleAddServer}
+        ipError={ipError}
       />
       <div className={styles.emptyPanel}>
         <h2 className={styles.description}>Тут могла быть ваша реклама</h2>

@@ -1,19 +1,66 @@
 .serverList {
-    flex: 1;
-    background-color: #2a3a5a;
-    padding: 20px;
-    border-radius: 16px;
-    color: white;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  min-width: 0;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.serverList:hover {
+  transform: translateY(-2px);
+}
+
+.heading {
+  margin: 0;
+  font-size: 1.6rem;
+  color: white;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #2dd3b7, #1fa5e8);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.serverList:hover .heading::after {
+  width: 100px;
+  background: linear-gradient(90deg, #2dd3b7, #1fa5e8, #2dd3b7);
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .cards {
+    flex-direction: column;
   }
   
   .heading {
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-    color: white;
+    font-size: 1.4rem;
   }
   
-  .cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+  .serverList:hover .heading::after {
+    width: 70px;
   }
+}
