@@ -126,28 +126,34 @@ const ServerDetail = () => {
 
   return (
     <div className={styles.container}>
-      <ServerInfo name={name} address={address} status={status} onBack={handleBack} />
-      <ServerContent
-        address={address}
-        backups={backups}
-        selectedBackup={selectedBackup}
-        restoreMode={restoreMode}
-        showModal={showModal}
-        loadingBackup={loadingBackup}
-        loadingRestore={loadingRestore}
-        setSelectedBackup={setSelectedBackup}
-        setShowModal={setShowModal}
-        handleCreateBackup={handleCreateBackup}
-        handleConfirmRestore={handleConfirmRestore}
-        onEnterRestoreMode={() => setRestoreMode(true)}
-        onCancelRestore={() => {
-          setRestoreMode(false);
-          setSelectedBackup(null);
-          setShowModal(false);
-        }}
-      />
+      <div className={styles.sidebar}>
+        <ServerInfo name={name} address={address} status={status} onBack={handleBack} />
+      </div>
+      <div className={styles.mainArea}>
+        <ServerContent
+          serverAddress={address}
+          address={address}
+          backups={backups}
+          selectedBackup={selectedBackup}
+          restoreMode={restoreMode}
+          showModal={showModal}
+          loadingBackup={loadingBackup}
+          loadingRestore={loadingRestore}
+          setSelectedBackup={setSelectedBackup}
+          setShowModal={setShowModal}
+          handleCreateBackup={handleCreateBackup}
+          handleConfirmRestore={handleConfirmRestore}
+          onEnterRestoreMode={() => setRestoreMode(true)}
+          onCancelRestore={() => {
+            setRestoreMode(false);
+            setSelectedBackup(null);
+            setShowModal(false);
+          }}
+        />
+      </div>
     </div>
   );
+  
 };
 
 export default ServerDetail;

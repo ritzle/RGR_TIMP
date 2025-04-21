@@ -1,0 +1,123 @@
+.scheduleListContainer {
+    padding: 15px;
+    background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .scrollArea {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: #2dd3b7 #2a3a5a;
+  }
+  
+  .scrollArea::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .scrollArea::-webkit-scrollbar-track {
+    background: #2a3a5a;
+    border-radius: 10px;
+  }
+  
+  .scrollArea::-webkit-scrollbar-thumb {
+    background-color: #2dd3b7;
+    border-radius: 10px;
+    border: 2px solid #2a3a5a;
+  }
+  
+  .scrollArea::-webkit-scrollbar-thumb:hover {
+    background-color: #26bba3;
+  }
+  
+  .scheduleItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(62, 81, 117, 0.5);
+    padding: 15px;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    border-left: 3px solid transparent;
+    animation: fadeIn 0.4s ease-out forwards;
+    animation-delay: calc(var(--order) * 0.05s);
+  }
+  
+  .scheduleItem:hover {
+    background: rgba(62, 81, 117, 0.7);
+    transform: translateX(5px);
+  }
+  
+  .scheduleInfo {
+    flex: 1;
+  }
+  
+  .scheduleType {
+    margin: 0;
+    font-weight: 600;
+    color: white;
+    font-size: 1.05rem;
+  }
+  
+  .scheduleComment {
+    margin: 8px 0 0;
+    font-size: 0.95rem;
+    color: #bbbbbb;
+    line-height: 1.5;
+  }
+  
+  .cancelButton {
+    background-color: #f53e3e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    margin-left: 15px;
+  }
+  
+  .cancelButton:hover:not(:disabled) {
+    background-color: #d62c2c;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(245, 62, 62, 0.3);
+  }
+  
+  .cancelButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .loading,
+  .error,
+  .empty {
+    color: #ccc;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .error {
+    color: #ff9e9e;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
