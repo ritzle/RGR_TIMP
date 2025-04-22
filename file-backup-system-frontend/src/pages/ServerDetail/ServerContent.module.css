@@ -24,14 +24,10 @@
 }
 
 .mainContent {
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
   width: 95%;
   margin: 0 auto;
-  background-color: #2a3a5a;
-  border-radius: 10px;
   position: relative;
   z-index: 1;
   min-height: fit-content;
@@ -168,3 +164,4 @@
   font-family: inherit;
   font-size: 1rem;
 }
+

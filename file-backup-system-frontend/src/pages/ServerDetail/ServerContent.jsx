@@ -29,26 +29,34 @@ const ServerContent = ({
   const [loadingSchedules, setLoadingSchedules] = useState(false);
   const [scheduleError, setScheduleError] = useState(null);
 
+  // Функция загрузки расписаний
   const loadSchedules = useCallback(async () => {
+    if (!serverAddress) return;
+    
     setLoadingSchedules(true);
     setScheduleError(null);
+    
     try {
-      const response = await fetch(`http://localhost:5000/api/list-schedules?address=${serverAddress}`);
-      const data = await response.json();
+      const response = await fetch(
+        `http://localhost:5000/api/list-schedules?address=${serverAddress}`,
+        { signal: AbortSignal.timeout(5000) } // Таймаут 5 секунд
+      );
       
-      if (response.ok) {
-        setSchedules(data.jobs || []);
-      } else {
-        setScheduleError(data.message || "Ошибка загрузки расписаний");
+      if (!response.ok) {
+        throw new Error(response.statusText);
       }
+      
+      const data = await response.json();
+      setSchedules(data.jobs || []);
     } catch (error) {
-      setScheduleError("Не удалось подключиться к серверу");
+      setScheduleError(error.message || "Не удалось загрузить расписания");
       console.error("Ошибка загрузки расписаний:", error);
     } finally {
       setLoadingSchedules(false);
     }
   }, [serverAddress]);
 
+  // Загрузка при монтировании
   useEffect(() => {
     loadSchedules();
   }, [loadSchedules]);

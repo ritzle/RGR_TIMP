@@ -5,16 +5,42 @@ const BackupList = ({ backups, restoreMode, selectedBackup, setSelectedBackup })
   <div className={styles.backupListContainer}>
     <div className={styles.scrollArea}>
       {backups.length > 0 ? (
-        backups.map(([name, comment], index) => (
+        backups.map(([name, comment, size, date], index) => (
           <div
             key={index}
             className={`${styles.backupItem} ${restoreMode ? styles.selectable : ""} ${selectedBackup === name ? styles.selected : ""}`}
-            onClick={() => {
-              if (restoreMode) setSelectedBackup(name);
-            }}
+            onClick={() => restoreMode && setSelectedBackup(name)}
           >
-            <p className={styles.backupName}>{name}</p>
-            {comment && <p className={styles.backupComment}>{comment}</p>}
+            <div className={styles.backupInfo}>
+              <div className={styles.backupHeader}>
+                <p className={styles.backupName}>{name}</p>
+              </div>
+              
+              {comment && (
+                <div className={styles.backupCommentContainer}>
+                  <p className={styles.backupComment}>{comment}</p>
+                </div>
+              )}
+              
+              <div className={styles.backupMeta}>
+                {size && <span className={styles.backupSize}>{size}</span>}
+                {date && <span className={styles.backupDate}>{date}</span>}
+              </div>
+            </div>
+            
+            {restoreMode && (
+              <div className={styles.backupActions}>
+                <button
+                  className={styles.actionButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedBackup(name);
+                  }}
+                >
+                  {selectedBackup === name ? "Выбран" : "Выбрать"}
+                </button>
+              </div>
+            )}
           </div>
         ))
       ) : (
