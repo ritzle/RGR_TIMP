@@ -79,7 +79,6 @@
   color: #a8b3cf;
   line-height: 1.4;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -92,7 +91,6 @@
 }
 
 .scheduleComment:hover {
-  -webkit-line-clamp: unset;
   max-height: none;
   overflow: visible;
   white-space: normal;
