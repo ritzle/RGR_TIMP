@@ -1,0 +1,162 @@
+[
+  {
+    "id": "timer_1min_1745347318.302306",
+    "trigger_type": "interval",
+    "comment": "тест на 1 минуту",
+    "created_at": "2025-04-22T18:47:15.794708",
+    "minutes": 1.0,
+    "display_text": "Каждые 1 минут"
+  },
+  {
+    "id": "timer_60min_1745347293.386519",
+    "trigger_type": "interval",
+    "comment": "тест на создание бэкапа",
+    "created_at": "2025-04-22T18:47:15.794749",
+    "minutes": 60.0,
+    "display_text": "Каждые 60 минут"
+  },
+  {
+    "id": "daily_1700_1745261284.287745",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.794802",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261287.770078",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.794866",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261289.140976",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.794906",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261290.961088",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.794942",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261292.547587",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.794978",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261296.291112",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795013",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261301.694444",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795045",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261303.163634",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795080",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261305.497686",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795142",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261307.195613",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795174",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261308.355197",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795207",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261309.484759",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795240",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261310.67847",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795270",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261312.229904",
+    "trigger_type": "cron",
+    "comment": "",
+    "created_at": "2025-04-22T18:47:15.795304",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745261376.018093",
+    "trigger_type": "cron",
+    "comment": "ттот",
+    "created_at": "2025-04-22T18:47:15.795335",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  },
+  {
+    "id": "daily_1700_1745347635.792653",
+    "trigger_type": "cron",
+    "comment": "тест на очень большой комент\nааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа",
+    "created_at": "2025-04-22T18:47:15.795366",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  }
+]
