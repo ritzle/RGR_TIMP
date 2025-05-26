@@ -226,31 +226,29 @@ const ServerContent = ({
     <div className={styles.wrapper}>
       {restoreMode && <div className={styles.globalOverlay}></div>}
 
-      <div className={styles.columnsContainer}>
-      {/* Бэкапы */}
-      <section className={styles.listColumn}>
-        <h2 className={styles.listTitle}>Бэкапы сервера</h2>
-        <BackupList
-          backups={Object.entries(backups)}
-          restoreMode={restoreMode}
-          selectedBackup={selectedBackup}
-          setSelectedBackup={handleSelectBackup}
-          onDeleteBackup={handleDeleteBackup}
-          loading={loadingBackups || deletingBackup}
-        />
-      </section>
+      <div className={styles.columnsContainer} style={{ display: 'flex', gap: '20px', padding: '0 20px' }}>
+        <section className={styles.mainContent} style={{ flex: 3 }}>
+          <h2 className="Back-title">Бэкапы сервера</h2>
+          <BackupList
+            backups={Object.entries(backups)}
+            restoreMode={restoreMode}
+            selectedBackup={selectedBackup}
+            setSelectedBackup={handleSelectBackup}
+            onDeleteBackup={handleDeleteBackup}
+            loading={loadingBackups || deletingBackup}
+          />
+        </section>
 
-      {/* Расписания */}
-      <section className={styles.listColumn}>
-        <h2 className={styles.listTitle}>Запланированные бэкапы</h2>
-        <ScheduleList
-          schedules={schedules}
-          loading={loadingSchedules}
-          error={scheduleError}
-          onCancelSchedule={handleCancelSchedule}
-        />
-      </section>
-    </div>
+        <section className={styles.schedulesColumn} style={{ flex: 2 }}>
+          <h2>Запланированные бэкапы</h2>
+          <ScheduleList
+            schedules={schedules}
+            loading={loadingSchedules}
+            error={scheduleError}
+            onCancelSchedule={handleCancelSchedule}
+          />
+        </section>
+      </div>
     
       <div className={styles.actions}>
         <button 

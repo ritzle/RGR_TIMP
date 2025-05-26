@@ -1,15 +1,15 @@
 import React from "react";
 import styles from "./BackupList.module.css";
 
-const BackupList = ({ backups, ...rest }) => (
+const BackupList = ({ backups, restoreMode, selectedBackup, setSelectedBackup, onDeleteBackup }) => (
   <div className={styles.backupListContainer}>
     <div className={styles.scrollArea}>
       {backups.length > 0 ? (
-        backups.map(([name, comment], index) => ( // Исправлено: только name и comment
+        backups.map(([name, comment, size, date], index) => (
           <div
             key={index}
-            className={`${styles.backupItem} ${rest.restoreMode ? styles.selectable : ""} ${rest.selectedBackup === name ? styles.selected : ""}`}
-            onClick={() => rest.restoreMode && rest.setSelectedBackup(name)}
+            className={`${styles.backupItem} ${restoreMode ? styles.selectable : ""} ${selectedBackup === name ? styles.selected : ""}`}
+            onClick={() => restoreMode && setSelectedBackup(name)}
           >
             <div className={styles.backupInfo}>
               <div className={styles.backupHeader}>
@@ -21,6 +21,11 @@ const BackupList = ({ backups, ...rest }) => (
                   <p className={styles.backupComment}>{comment}</p>
                 </div>
               )}
+              
+              <div className={styles.backupMeta}>
+                {size && <span className={styles.backupSize}>{size}</span>}
+                {date && <span className={styles.backupDate}>{date}</span>}
+              </div>
             </div>
             
             <div className={styles.backupActions}>
@@ -28,7 +33,7 @@ const BackupList = ({ backups, ...rest }) => (
                 className={styles.deleteButton}
                 onClick={(e) => {
                   e.stopPropagation();
-                  rest.onDeleteBackup(name);
+                  onDeleteBackup(name);
                 }}
               >
                 Удалить

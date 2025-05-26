@@ -1,0 +1,101 @@
+import React from "react";
+import styles from "./BackupList.module.css";
+
+const BackupList = ({ 
+  backups = {}, 
+  restoreMode = false, 
+  selectedBackup = null, 
+  setSelectedBackup = () => {}, 
+  onDeleteBackup = () => {},
+  loading = false
+}) => {
+  // Преобразуем объект бэкапов в массив для удобного маппинга
+  const backupEntries = Object.entries(backups || {});
+
+  // Функция для форматирования даты из имени файла
+  const formatBackupDate = (fileName) => {
+    try {
+      // Пример имени: "backup_2025-05-12_18-44-49.zip"
+      const dateTimePart = fileName
+        .replace('backup_', '')
+        .replace('.zip', '')
+        .split('_');
+      
+      if (dateTimePart.length === 2) {
+        return `${dateTimePart[0].replace(/-/g, '/')} ${dateTimePart[1].replace(/-/g, ':')}`;
+      }
+      return fileName;
+    } catch {
+      return fileName;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className={styles.backupListContainer}>
+        <p className={styles.loadingMessage}>Загрузка списка бэкапов...</p>
+      </div>
+    );
+  }
+
+  if (backupEntries.length === 0) {
+    return (
+      <div className={styles.backupListContainer}>
+        <p className={styles.emptyMessage}>Нет доступных бэкапов</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.backupListContainer}>
+      <div className={styles.scrollArea}>
+        {backupEntries.map(([fileName, comment]) => (
+          <div
+            key={fileName}
+            className={`${styles.backupItem} ${
+              restoreMode ? styles.selectable : ''
+            } ${
+              selectedBackup === fileName ? styles.selected : ''
+            }`}
+            onClick={() => restoreMode && setSelectedBackup(fileName)}
+          >
+            <div className={styles.backupInfo}>
+              <div className={styles.backupHeader}>
+                <p className={styles.backupName}>
+                  {fileName.replace('backup_', '').replace('.zip', '')}
+                </p>
+              </div>
+              
+              {comment && (
+                <div className={styles.backupCommentContainer}>
+                  <p className={styles.backupComment}>{comment}</p>
+                </div>
+              )}
+              
+              <div className={styles.backupMeta}>
+                <span className={styles.backupDate}>
+                  {formatBackupDate(fileName)}
+                </span>
+              </div>
+            </div>
+            
+            <div className={styles.backupActions}>
+              <button
+                className={styles.deleteButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteBackup(fileName);
+                }}
+                disabled={restoreMode}
+              >
+                Удалить
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default BackupList;

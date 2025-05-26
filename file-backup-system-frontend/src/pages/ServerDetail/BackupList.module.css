@@ -251,3 +251,32 @@
     transition: none !important;
   }
 }
+
+.deleteButton {
+  background-color: #ff4d4f; /* Красный фон */
+  color: #ffffff;            /* Белый текст */
+  border: none;
+  padding: 6px 12px;
+  margin-top: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: #ff7875; /* Светлее при наведении */
+  transform: scale(1.05);    /* Легкое увеличение */
+}
+
+.deleteButton:active {
+  background-color: #d9363e; /* Темнее при нажатии */
+  transform: scale(0.95);    /* Легкое уменьшение при нажатии */
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #cccccc;
+  color: #666666;
+}

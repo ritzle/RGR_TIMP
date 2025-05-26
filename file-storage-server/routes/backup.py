@@ -29,6 +29,7 @@ def create_backup_with_comment(comment=""):
     with open(comment_path, "w", encoding="utf-8") as f:
         json.dump({
             "comment": comment,
+            "backup_name": backup_name,
             "created_at": timestamp
         }, f, ensure_ascii=False, indent=2)
 
@@ -78,11 +79,12 @@ def create_backup():
             return jsonify({"message": "Нет файлов для создания бэкапа"}), 400
 
         return jsonify({
+            "success": True,
             "message": "Бэкап успешно создан",
-            "backupName": result["backup_name"],
+            "backup_name": result["backup_name"],
             "timestamp": result["timestamp"],
             "comment": result["comment"]
         }), 200
 
     except Exception as e:
-        return jsonify({"message": f"Ошибка при создании бэкапа: {str(e)}"}), 500
+        return jsonify({"success": False, "message": f"Ошибка при создании бэкапа: {str(e)}"}), 500

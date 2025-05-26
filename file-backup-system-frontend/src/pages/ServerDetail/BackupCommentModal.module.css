@@ -91,3 +91,24 @@
     color: white;
     border-color: white;
   }
+
+  .successInfo {
+    margin: 20px 0;
+  }
+  
+  .infoRow {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: baseline;
+  }
+  
+  .infoLabel {
+    font-weight: bold;
+    min-width: 100px;
+    margin-right: 10px;
+  }
+  
+  .infoValue {
+    flex: 1;
+    word-break: break-all;
+  }

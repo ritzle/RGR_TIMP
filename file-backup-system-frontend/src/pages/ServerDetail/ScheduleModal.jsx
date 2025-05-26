@@ -4,7 +4,7 @@ import styles from "./ScheduleModal.module.css";
 const ScheduleModal = ({ onClose, onCreate }) => {
   const [scheduleType, setScheduleType] = useState("daily");
   const [time, setTime] = useState("17:00");
-  const [minutes, setMinutes] = useState(60);
+  const [minutes, setMinutes] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,9 +15,12 @@ const ScheduleModal = ({ onClose, onCreate }) => {
       return;
     }
     
-    if (scheduleType === "interval" && (!minutes || minutes < 1)) {
-      setError("Интервал должен быть не менее 1 минуты");
-      return;
+    if (scheduleType === "interval") {
+      const mins = parseInt(minutes);
+      if (isNaN(mins) || mins < 1) {
+        setError("Интервал должен быть не менее 1 минуты");
+        return;
+      }
     }
 
     setLoading(true);
@@ -25,7 +28,7 @@ const ScheduleModal = ({ onClose, onCreate }) => {
     
     const result = await onCreate(
       scheduleType,
-      scheduleType === "daily" ? time : minutes,
+      scheduleType === "daily" ? time : parseInt(minutes),
       comment
     );
     
@@ -36,6 +39,14 @@ const ScheduleModal = ({ onClose, onCreate }) => {
     }
     
     setLoading(false);
+  };
+
+  const handleMinutesChange = (e) => {
+    const value = e.target.value;
+    // Разрешаем только цифры и пустую строку
+    if (value === "" || /^[0-9]+$/.test(value)) {
+      setMinutes(value);
+    }
   };
 
   return (
@@ -69,11 +80,12 @@ const ScheduleModal = ({ onClose, onCreate }) => {
           <div className={styles.formGroup}>
             <label>Интервал (минуты):</label>
             <input
-              type="number"
+              type="text"
               min="1"
               value={minutes}
-              onChange={(e) => setMinutes(parseInt(e.target.value) || 0)}
+              onChange={handleMinutesChange}
               className={styles.numberInput}
+              placeholder="Введите интервал"
             />
           </div>
         )}

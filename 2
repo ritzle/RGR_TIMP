@@ -7,18 +7,15 @@ import ScheduleList from "./ScheduleList";
 import BackupCommentModal from "./BackupCommentModal";
 
 const ServerContent = ({
-  backups,
+  serverAddress,
   selectedBackup,
   restoreMode,
   loadingRestore,
   setSelectedBackup,
   onEnterRestoreMode,
   onCancelRestore,
-  serverAddress,
-  onBackupDeleted,
-  onBackupCreated,
-  onBackupsReload
 }) => {
+  const [backups, setBackups] = useState([]);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [comment, setComment] = useState("");
@@ -30,104 +27,127 @@ const ServerContent = ({
   const [createdBackupName, setCreatedBackupName] = useState('');
   const [deletingBackup, setDeletingBackup] = useState(false);
   const [loadingBackups, setLoadingBackups] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Функция загрузки бэкапов
+  const fetchData = async (url, options = {}) => {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Ошибка сервера');
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.error(`Ошибка при запросе к ${url}:`, err);
+      throw err;
+    }
+  };
+
   const loadBackups = useCallback(async () => {
     if (!serverAddress) return;
     
     setLoadingBackups(true);
+    setError(null);
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/list-backups?address=${serverAddress}`,
-        { signal: AbortSignal.timeout(5000) }
+      const data = await fetchData(
+        `http://localhost:5000/api/get-backups?address=${encodeURIComponent(serverAddress)}`
       );
       
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
+      // Бэкенд возвращает объект {backups: {"имя_файла": "комментарий"}}
+      // Преобразуем в массив объектов [{name: "имя", comment: "комментарий"}]
+      const formattedBackups = data.backups ? Object.entries(data.backups).map(([name, comment]) => ({
+        name,
+        comment
+      })) : [];
       
-      const data = await response.json();
-      if (onBackupsReload) {
-        onBackupsReload(data.backups);
-      }
-    } catch (error) {
-      console.error("Ошибка загрузки бэкапов:", error);
+      setBackups(formattedBackups);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoadingBackups(false);
     }
-  }, [serverAddress, onBackupsReload]);
+  }, [serverAddress]);
 
-  // Функция загрузки расписаний
   const loadSchedules = useCallback(async () => {
     if (!serverAddress) return;
     
     setLoadingSchedules(true);
     setScheduleError(null);
-    
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/list-schedules?address=${serverAddress}`,
-        { signal: AbortSignal.timeout(5000) }
+      const data = await fetchData(
+        `http://localhost:5000/api/list-schedules?address=${encodeURIComponent(serverAddress)}`
       );
-      
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      
-      const data = await response.json();
       setSchedules(data.jobs || []);
-    } catch (error) {
-      setScheduleError(error.message || "Не удалось загрузить расписания");
-      console.error("Ошибка загрузки расписаний:", error);
+    } catch (err) {
+      setScheduleError(err.message);
     } finally {
       setLoadingSchedules(false);
     }
   }, [serverAddress]);
 
-  // Загрузка при монтировании
   useEffect(() => {
-    loadBackups();
-    loadSchedules();
+    const loadData = async () => {
+      await Promise.all([loadBackups(), loadSchedules()]);
+    };
+    loadData();
   }, [loadBackups, loadSchedules]);
 
-  // Функция удаления бэкапа
   const handleDeleteBackup = async (backupName) => {
-    if (!window.confirm(`Вы уверены, что хотите удалить бэкап ${backupName}?`)) {
-      return;
-    }
-
+    if (!window.confirm(`Вы уверены, что хотите удалить бэкап ${backupName}?`)) return;
+    
     setDeletingBackup(true);
     try {
-      const encodedBackupName = encodeURIComponent(backupName);
-      const encodedServerAddress = encodeURIComponent(serverAddress);
-
-      const response = await fetch(
-        `http://localhost:5000/api/remove-backup?backupName=${encodedBackupName}&address=${encodedServerAddress}`,
-        { 
-          method: "DELETE",
-          headers: { 'Content-Type': 'application/json' }
-        }
+      await fetchData(
+        `http://localhost:5000/api/remove-backup?backupName=${encodeURIComponent(backupName)}&address=${encodeURIComponent(serverAddress)}`,
+        { method: 'DELETE' }
       );
-      await loadBackups();
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Ошибка при удалении бэкапа");
-      }
-
-      if (onBackupDeleted) {
-        onBackupDeleted(backupName);
-      }
       
-      // Обновляем список бэкапов
+      setBackups(prev => {
+        const newBackups = {...prev};
+        delete newBackups[backupName];
+        return newBackups;
+      });
+    } catch (err) {
+      setError(err.message);
       await loadBackups();
-      
-      alert(data.message || "Бэкап успешно удалён");
-    } catch (error) {
-      console.error("Ошибка удаления бэкапа:", error);
-      alert(`Ошибка при удалении: ${error.message}`);
     } finally {
       setDeletingBackup(false);
+    }
+  };
+
+  const handleCreateBackup = async (comment) => {
+    setLoadingBackup(true);
+    setError(null);
+    try {
+      const data = await fetchData(
+        `http://localhost:5000/api/create-backup?address=${encodeURIComponent(serverAddress)}`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ comment })
+        }
+      );
+
+      setBackups(prev => ({
+        [data.backup_name]: comment,
+        ...prev
+      }));
+      
+      setCreatedBackupName(data.backup_name);
+      setBackupCompleted(true);
+      return true;
+    } catch (err) {
+      setError(err.message);
+      return false;
+    } finally {
+      setLoadingBackup(false);
     }
   };
 
@@ -173,38 +193,6 @@ const ServerContent = ({
     }
   };
 
-  const handleCreateBackup = async (comment) => {
-    setLoadingBackup(true);
-    try {
-      const response = await fetch(`http://localhost:5000/api/create-backup?address=${serverAddress}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ comment })
-      });
-  
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || "Ошибка при создании бэкапа");
-      }
-  
-      setCreatedBackupName(data.backup_name);
-      setBackupCompleted(true);
-      
-      if (onBackupCreated) {
-        onBackupCreated(data.backup_name);
-      }
-      
-      // Обновляем список бэкапов
-      await loadBackups();
-      
-    } catch (error) {
-      console.error("Ошибка создания бэкапа:", error);
-    } finally {
-      setLoadingBackup(false);
-    }
-  };
-
   const handleBackupClick = () => {
     setBackupCompleted(false);
     setShowCommentModal(true);
@@ -222,35 +210,49 @@ const ServerContent = ({
     }
   };
 
+  if (error) {
+    return (
+      <div className={styles.errorContainer}>
+        <h2>Ошибка загрузки данных</h2>
+        <p>{error}</p>
+        <button onClick={() => {
+          setError(null);
+          loadBackups();
+          loadSchedules();
+        }}>
+          Повторить попытку
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.wrapper}>
       {restoreMode && <div className={styles.globalOverlay}></div>}
 
       <div className={styles.columnsContainer}>
-      {/* Бэкапы */}
-      <section className={styles.listColumn}>
-        <h2 className={styles.listTitle}>Бэкапы сервера</h2>
-        <BackupList
-          backups={Object.entries(backups)}
-          restoreMode={restoreMode}
-          selectedBackup={selectedBackup}
-          setSelectedBackup={handleSelectBackup}
-          onDeleteBackup={handleDeleteBackup}
-          loading={loadingBackups || deletingBackup}
-        />
-      </section>
+        <section className={styles.mainContent}>
+          <h2 className="Back-title">Бэкапы сервера</h2>
+          <BackupList
+            backups={backups}
+            restoreMode={restoreMode}
+            selectedBackup={selectedBackup}
+            setSelectedBackup={handleSelectBackup}
+            onDeleteBackup={handleDeleteBackup}
+            loading={loadingBackups || deletingBackup}
+          />
+        </section>
 
-      {/* Расписания */}
-      <section className={styles.listColumn}>
-        <h2 className={styles.listTitle}>Запланированные бэкапы</h2>
-        <ScheduleList
-          schedules={schedules}
-          loading={loadingSchedules}
-          error={scheduleError}
-          onCancelSchedule={handleCancelSchedule}
-        />
-      </section>
-    </div>
+        <section className={styles.schedulesColumn}>
+          <h2>Запланированные бэкапы</h2>
+          <ScheduleList
+            schedules={schedules}
+            loading={loadingSchedules}
+            error={scheduleError}
+            onCancelSchedule={handleCancelSchedule}
+          />
+        </section>
+      </div>
     
       <div className={styles.actions}>
         <button 

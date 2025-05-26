@@ -21,6 +21,10 @@ const ServerDetail = () => {
 
   const handleBack = () => navigate("/home");
 
+  const handleBackupsReload = (newBackups) => {
+    setBackups(newBackups);
+  };
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user?.email) return alert("Пользователь не авторизован");
@@ -144,6 +148,7 @@ const ServerDetail = () => {
           handleCreateBackup={handleCreateBackup}
           handleConfirmRestore={handleConfirmRestore}
           onEnterRestoreMode={() => setRestoreMode(true)}
+          onBackupsReload={handleBackupsReload}
           onCancelRestore={() => {
             setRestoreMode(false);
             setSelectedBackup(null);
