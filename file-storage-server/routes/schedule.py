@@ -7,6 +7,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from pathlib import Path
 
+import logging
+logger = logging.getLogger(__name__)
+
 schedule_bp = Blueprint("schedule", __name__)
 
 FILES_FOLDER = "storage/files"
@@ -209,21 +212,75 @@ def list_schedules():
 
 @schedule_bp.route("/backup/cancel-schedule/<job_id>", methods=["DELETE"])
 def cancel_schedule(job_id):
+    # Логирование входящего запроса
+
+    
+    logger.info(f"Received request to cancel job. ID: '{job_id}'")
+    logger.debug(f"Full request path: {request.path}")
+    logger.debug(f"Request args: {request.args}")
+
+    # Проверка валидности job_id
+    if not job_id or job_id == "undefined":
+        logger.error(f"Invalid job ID received: '{job_id}'")
+        return jsonify({
+            "success": False,
+            "error": "Invalid job ID",
+            "details": f"Job ID cannot be empty or 'undefined'"
+        }), 400
+
     job = scheduler.get_job(job_id)
+    
+    # Логирование найденного задания
+    logger.debug(f"Queried job from scheduler: {job}")
+    print("-----------------", job, "---------------")
+
     if not job:
+        logger.warning(f"Job with ID '{job_id}' not found in scheduler")
         return jsonify({
             "success": False,
             "error": "Job not found",
             "details": f"Job with ID {job_id} doesn't exist"
         }), 404
 
-    scheduler.remove_job(job_id)
-    save_scheduled_jobs()
+    try:
+        # Удаляем задание
+        logger.info(f"Attempting to remove job: {job_id}")
+        scheduler.remove_job(job_id)
+        logger.info(f"Successfully removed job: {job_id}")
 
-    return jsonify({
-        "success": True,
-        "message": "Job cancelled successfully",
-        "cancelled_job": job_id
-    })
+        # Обновляем файл с заданиями
+        if Path(SCHEDULED_JOBS_FILE).exists():
+            logger.debug(f"Updating jobs file: {SCHEDULED_JOBS_FILE}")
+            
+            try:
+                with open(SCHEDULED_JOBS_FILE, 'r') as f:
+                    jobs = json.load(f)
+                    logger.debug(f"Current jobs in file: {len(jobs)}")
+            except json.JSONDecodeError as e:
+                logger.warning(f"Error reading jobs file: {str(e)}")
+                jobs = []
+
+            updated_jobs = [job for job in jobs if job.get('id') != job_id]
+            logger.debug(f"Jobs after removal: {len(updated_jobs)}")
+
+            with open(SCHEDULED_JOBS_FILE, 'w') as f:
+                json.dump(updated_jobs, f, indent=2, ensure_ascii=False)
+                logger.info(f"Successfully updated jobs file")
+
+        logger.info(f"Job {job_id} cancelled successfully")
+        return jsonify({
+            "success": True,
+            "message": "Job cancelled successfully",
+            "cancelled_job": job_id
+        })
+
+    except Exception as e:
+        logger.error(f"Error cancelling job {job_id}: {str(e)}", exc_info=True)
+        return jsonify({
+            "success": False,
+            "error": "Internal server error",
+            "details": str(e)
+        }), 500
+
 
 load_scheduled_jobs()

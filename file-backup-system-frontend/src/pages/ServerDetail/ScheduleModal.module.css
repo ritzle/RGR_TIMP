@@ -1,180 +1,245 @@
 /* Основные стили модального окна */
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    backdrop-filter: blur(2px);
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.modal {
+  background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 500px;
+  padding: 30px;
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid rgba(45, 211, 183, 0.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modalTitle {
+  margin: 0 0 25px 0;
+  font-size: 1.5rem;
+  color: #2dd3b7;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Стили для формы */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #a8b3cf;
+  font-weight: 500;
+}
+
+/* Стили для элементов ввода */
+.select,
+.timeInput,
+.numberInput,
+.commentInput {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #3e5175;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.commentInput {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232dd3b7'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 1em;
+}
+
+/* Стили для выпадающего списка */
+.select option {
+  background-color: #2a3a5a;
+  color: white;
+}
+
+.select option:hover {
+  background-color: #3e5175 !important;
+  color: #2dd3b7 !important;
+}
+
+/* Стили для выбора времени */
+.timeInput::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+}
+
+.timeInput::-webkit-datetime-edit-fields-wrapper {
+  background-color: #3e5175;
+}
+
+.timeInput::-webkit-datetime-edit-text,
+.timeInput::-webkit-datetime-edit-hour-field,
+.timeInput::-webkit-datetime-edit-minute-field,
+.timeInput::-webkit-datetime-edit-ampm-field {
+  color: white;
+  padding: 0 0.15em;
+}
+
+.timeInput::-webkit-inner-spin-button {
+  display: none;
+}
+
+.numberInput::-webkit-outer-spin-button,
+.numberInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Состояния элементов ввода */
+.select:focus,
+.timeInput:focus,
+.numberInput:focus,
+.commentInput:focus {
+  -webkit-box-shadow: 0 0 0 3px rgba(45, 211, 183, 0.2);
+  outline: none;
+  border-color: #2dd3b7;
+  box-shadow: 0 0 0 3px rgba(45, 211, 183, 0.2);
+  background-color: #2a3a5a;
+}
+
+
+.select:hover,
+.timeInput:hover,
+.numberInput:hover,
+.commentInput:hover {
+  border-color: #2dd3b7;
+  box-shadow: 0 0 8px rgba(45, 211, 183, 0.5);
+  background-color: #2a3a5a;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+
+
+/* Плейсхолдеры */
+.select::placeholder,
+.timeInput::placeholder,
+.numberInput::placeholder,
+.commentInput::placeholder {
+  color: #7f8fa4;
+  opacity: 1;
+}
+
+/* Стили для кнопок */
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+
+.cancelBtn,
+.confirmBtn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease;
+}
+
+/* Отмена */
+.cancelBtn,.confirmBtn {
+  background: transparent;
+  border: 1px solid #3e5175;
+  color: #a8b3cf;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease;
+}
+
+.cancelBtn:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+  opacity: 0.95;
+  background-color: rgba(255, 107, 107, 0.05);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(221, 53, 53, 0.25);
+}
+
+
+/* Подтвердить — зелёное наведение */
+.confirmBtn:hover:not(:disabled) {
+  border-color: #2dd3b7;
+  color: #2dd3b7;
+  opacity: 0.95;
+  background-color: rgba(45, 211, 183, 0.05);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(45, 211, 183, 0.25);
+}
+
+
+.confirmBtn:disabled {
+  background: #3e5175;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Стили для ошибок */
+.error {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  padding: 10px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #ff6b6b;
+  margin: -0.5rem 0 1rem;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
   .modal {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 500px;
-    padding: 30px;
-    animation: fadeIn 0.3s ease-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    width: 90%;
+    padding: 20px;
   }
   
   .modalTitle {
-    margin: 0 0 25px 0;
-    font-size: 1.5rem;
-    color: #2a3a5a;
-    font-weight: 600;
-    text-align: center;
-  }
-  
-  /* Стили для формы */
-  .formGroup {
+    font-size: 1.3rem;
     margin-bottom: 20px;
   }
   
-  .formGroup label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 0.95rem;
-    color: #4a5568;
-    font-weight: 500;
-  }
-  
-  /* Стили для элементов ввода */
-  .select,
-  .timeInput,
-  .numberInput,
-  .commentInput {
-    width: 90%;
-    padding: 12px 15px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-    background-color: #f8fafc;
-  }
-  
-  .select {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 1em;
-  }
-  
-  .timeInput {
-    padding-right: 12px;
-  }
-  
-  .numberInput::-webkit-outer-spin-button,
-  .numberInput::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  
-  .commentInput {
-    min-height: 90px;
-    resize: vertical;
-  }
-  
-  /* Состояния элементов ввода */
-  .select:focus,
-  .timeInput:focus,
-  .numberInput:focus,
-  .commentInput:focus {
-    outline: none;
-    border-color: #2dd3b7;
-    box-shadow: 0 0 0 3px rgba(45, 211, 183, 0.2);
-    background-color: #fff;
-  }
-  
-  /* Стили для кнопок */
   .modalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 30px;
+    flex-direction: column;
+    gap: 10px;
   }
   
-  .cancelBtn {
-    padding: 12px 24px;
-    background-color: #f1f5f9;
-    border: none;
-    border-radius: 8px;
-    color: #64748b;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .cancelBtn:hover {
-    background-color: #e2e8f0;
-    color: #475569;
-  }
-  
+  .cancelBtn,
   .confirmBtn {
-    padding: 12px 24px;
-    background-color: #2dd3b7;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    width: 100%;
+    text-align: center;
   }
-  
-  .confirmBtn:hover {
-    background-color: #28c0a6;
-  }
-  
-  .confirmBtn:disabled {
-    background-color: #cbd5e1;
-    cursor: not-allowed;
-  }
-  
-  /* Стили для ошибок */
-  .error {
-    color: #e53e3e;
-    font-size: 0.9rem;
-    margin-top: -10px;
-    margin-bottom: 15px;
-    padding: 8px 12px;
-    background-color: #fff5f5;
-    border-radius: 6px;
-    border-left: 3px solid #e53e3e;
-  }
-  
-  /* Адаптивность */
-  @media (max-width: 600px) {
-    .modal {
-      width: 90%;
-      padding: 20px;
-    }
-    
-    .modalTitle {
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-    }
-    
-    .modalActions {
-      flex-direction: column-reverse;
-      gap: 10px;
-    }
-    
-    .cancelBtn,
-    .confirmBtn {
-      width: 100%;
-    }
-  }
-
+}

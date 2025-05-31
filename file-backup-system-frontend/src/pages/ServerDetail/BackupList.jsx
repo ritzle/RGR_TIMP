@@ -5,35 +5,46 @@ const BackupList = ({ backups, ...rest }) => (
   <div className={styles.backupListContainer}>
     <div className={styles.scrollArea}>
       {backups.length > 0 ? (
-        backups.map(([name, comment], index) => ( // Исправлено: только name и comment
+        backups.map(([name, data], index) => (
           <div
             key={index}
-            className={`${styles.backupItem} ${rest.restoreMode ? styles.selectable : ""} ${rest.selectedBackup === name ? styles.selected : ""}`}
-            onClick={() => rest.restoreMode && rest.setSelectedBackup(name)}
+            className={`${styles.backupItem} ${rest.restoreMode ? styles.selectable : ''} ${
+              rest.selectedBackup === name ? styles.selected : ''
+            }`}
+            onClick={() => {
+              if (rest.restoreMode) {
+                rest.setSelectedBackup(name);
+              } else {
+                // Передаем имя бэкапа и tree-структуру
+                rest.onBackupClick(name, data.tree);
+              }
+            }}
           >
             <div className={styles.backupInfo}>
               <div className={styles.backupHeader}>
                 <p className={styles.backupName}>{name}</p>
+                <p className={styles.backupDate}>{data.created_at}</p>
               </div>
-              
-              {comment && (
-                <div className={styles.backupCommentContainer}>
-                  <p className={styles.backupComment}>{comment}</p>
-                </div>
-              )}
+
+              <div className={styles.commentContainer}>
+                {data.comment ? (
+                  <p className={styles.backupComment}>{data.comment}</p>
+                ) : (
+                  <p className={styles.emptyComment}>&nbsp;</p>
+                )}
+              </div>
             </div>
-            
-            <div className={styles.backupActions}>
-              <button
-                className={styles.deleteButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  rest.onDeleteBackup(name);
-                }}
-              >
-                Удалить
-              </button>
-            </div>
+
+            <button
+              className={styles.deleteButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                rest.onDeleteBackup(name);
+              }}
+              disabled={rest.loading}
+            >
+              Удалить
+            </button>
           </div>
         ))
       ) : (

@@ -9,6 +9,19 @@ backup_bp = Blueprint("backup", __name__)
 FILES_FOLDER = "storage/files"
 BACKUP_FOLDER = "storage/backups"
 
+def build_file_tree(files):
+    tree = {}
+    for path in files:
+        parts = path.split(os.sep)
+        current = tree
+        for i, part in enumerate(parts):
+            if i == len(parts) - 1:
+                current[part] = "file"
+            else:
+                current = current.setdefault(part, {})
+    return tree
+
+
 def create_backup_with_comment(comment=""):
     if not os.path.exists(FILES_FOLDER) or not os.listdir(FILES_FOLDER):
         return False
@@ -17,27 +30,35 @@ def create_backup_with_comment(comment=""):
     backup_name = f"backup_{timestamp}.zip"
     backup_path = os.path.join(BACKUP_FOLDER, backup_name)
 
+    relative_paths = []
+
     with zipfile.ZipFile(backup_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         for root, _, files in os.walk(FILES_FOLDER):
             for file in files:
                 file_path = os.path.join(root, file)
                 arcname = os.path.relpath(file_path, FILES_FOLDER)
                 zipf.write(file_path, arcname)
+                relative_paths.append(arcname)
+
+    tree = build_file_tree(relative_paths)
 
     comment_filename = f"{backup_name}.json"
     comment_path = os.path.join(BACKUP_FOLDER, comment_filename)
+
     with open(comment_path, "w", encoding="utf-8") as f:
         json.dump({
             "comment": comment,
             "backup_name": backup_name,
-            "created_at": timestamp
+            "created_at": timestamp,
+            "tree": tree
         }, f, ensure_ascii=False, indent=2)
 
     return {
         "success": True,
         "backup_name": backup_name,
         "timestamp": timestamp,
-        "comment": comment
+        "comment": comment,
+        "tree": tree
     }
 
 
@@ -51,21 +72,27 @@ def list_backups():
 
     for file in os.listdir(BACKUP_FOLDER):
         if file.endswith(".zip"):
-            base_name = file
             comment_file = os.path.join(BACKUP_FOLDER, f"{file}.json")
             comment = ""
+            tree = {}
 
             if os.path.exists(comment_file):
                 try:
                     with open(comment_file, "r", encoding="utf-8") as f:
                         comment_data = json.load(f)
                         comment = comment_data.get("comment", "")
+                        tree = comment_data.get("tree", {})
                 except Exception as e:
                     comment = f"[Ошибка чтения комментария: {str(e)}]"
 
-            result[base_name] = comment
+            result[file] = {
+                "comment": comment,
+                "tree": tree
+            }
 
     return jsonify({"backups": result})
+
+
 
 
 @backup_bp.route("/create_backup", methods=["POST"])

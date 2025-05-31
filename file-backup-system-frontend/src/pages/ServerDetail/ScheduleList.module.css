@@ -1,26 +1,20 @@
 .scheduleListContainer {
   padding: 15px;
-  background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
   border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.5s ease-out;
-  border: 1px solid rgba(45, 211, 183, 0.2);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .scrollArea {
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-height: 500px;
+  gap: 8px;
+  max-height: 530px;
   overflow-y: auto;
   padding-right: 5px;
   scrollbar-width: thin;
-  scrollbar-color: #f53e3e #2a3a5a;
+  scrollbar-color: #28b5ec #2a3a5a;
+  padding-bottom: 8px;
 }
 
 .scrollArea::-webkit-scrollbar {
@@ -33,13 +27,13 @@
 }
 
 .scrollArea::-webkit-scrollbar-thumb {
-  background-color: #f53e3e;
+  background-color: #28b5ec;
   border-radius: 10px;
   border: 1px solid #2a3a5a;
 }
 
 .scrollArea::-webkit-scrollbar-thumb:hover {
-  background-color: #d62c2c;
+  background-color: #1a9fd8;
 }
 
 .scheduleItem {
@@ -49,85 +43,78 @@
   background: rgba(62, 81, 117, 0.6);
   padding: 12px 15px;
   border-radius: 8px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   border-left: 3px solid transparent;
   animation: fadeIn 0.3s ease-out forwards;
-  animation-delay: calc(var(--order) * 0.05s);
+  position: relative;
+  margin-bottom: 4px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .scheduleItem:hover {
   background: rgba(62, 81, 117, 0.8);
   transform: translateX(3px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
 .scheduleInfo {
   flex: 1;
+  min-width: 0;
 }
 
 .scheduleType {
-  margin: 0;
-  font-weight: 600;
-  color: #ffffff;
+  margin: 0 0 8px;
   font-size: 1rem;
-  letter-spacing: 0.3px;
+  color: #4fa3ff;
+  font-weight: 500;
 }
 
 .scheduleComment {
-  margin: 6px 0 0;
+  display: inline-block;
+  max-height: 2.6em;
   font-size: 0.9rem;
   color: #a8b3cf;
   line-height: 1.4;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -moz-box;
-  -moz-box-orient: vertical;
-  max-height: calc(3 * 1.4em);
   word-break: break-word;
   overflow-wrap: break-word;
+  white-space: nowrap;
+  vertical-align: top;
   transition: all 0.3s ease;
+  z-index: 0;
+  max-width: 50ch;
+  cursor: help;
 }
 
 .scheduleComment:hover {
-  max-height: none;
-  overflow: visible;
   white-space: normal;
   background: rgba(0, 0, 0, 0.1);
   padding: 4px 8px;
   border-radius: 4px;
-  cursor: help;
-}
-
-@supports (line-clamp: 3) {
-  .scheduleComment {
-    line-clamp: 3;
-    display: block;
-  }
-  .scheduleComment:hover {
-    line-clamp: unset;
-  }
+  z-index: 2;
+  max-height: none;
 }
 
 .cancelButton {
-  background-color: #f53e3e;
+  background-color: #ff4d4f;
   color: white;
   border: none;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 5px;
   cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  margin-left: 12px;
   font-size: 0.85rem;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  text-align: center;
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: #d62c2c;
+  background-color: #ff7875;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(245, 62, 62, 0.3);
+  box-shadow: 0 2px 4px rgba(255, 120, 117, 0.3);
 }
 
 .cancelButton:disabled {
@@ -139,24 +126,26 @@
 .error,
 .empty {
   color: #ccc;
-  font-style: italic;
   text-align: center;
-  padding: 15px;
-  animation: fadeIn 0.4s ease-out;
+  padding: 20px;
+  font-style: italic;
 }
 
-.error {
-  color: #ff9e9e;
-}
 
-.scheduleDivider {
-  height: 1px;
-  background: rgba(45, 211, 183, 0.1);
-  margin: 5px 0;
+@media (max-width: 768px) {
+  .scheduleItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .cancelButton {
+    align-self: flex-end;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  .scheduleItem {
     animation: none !important;
     transition: none !important;
   }

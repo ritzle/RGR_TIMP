@@ -15,9 +15,14 @@
   overflow: hidden;
   animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform;
-  z-index: 10;
   height: 100vh;
+
+  transform-origin: left center; /* точка масштабирования слева */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+
+
 
 .sidebar::before {
   content: '';
@@ -157,3 +162,4 @@
   box-shadow: 0 0 10px #feca57;
   animation: pulse 1.5s infinite ease-in-out;
 }
+

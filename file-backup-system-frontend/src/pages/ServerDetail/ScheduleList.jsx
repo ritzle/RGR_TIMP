@@ -17,7 +17,7 @@ const ScheduleList = ({
         ) : schedules.length > 0 ? (
           schedules.map((schedule, index) => (
             <div 
-              key={schedule.id}
+              key={schedule.job_id}
               className={styles.scheduleItem}
               style={{ '--order': index }}
             >

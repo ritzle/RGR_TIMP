@@ -1,0 +1,33 @@
+{
+  "comment": "много файлов",
+  "backup_name": "backup_2025-05-31_06-29-19.zip",
+  "created_at": "2025-05-31_06-29-19",
+  "tree": {
+    "test11111": "file",
+    "test111": "file",
+    "test1111111": "file",
+    "test6": "file",
+    "test1": "file",
+    "test11111111111111": "file",
+    "test5": "file",
+    "test1.txt": "file",
+    "test111111111111": "file",
+    "test2.txt": "file",
+    "test111111": "file",
+    "test1111111111111": "file",
+    "test111111111": "file",
+    "test2": "file",
+    "test11111111111": "file",
+    "test7": "file",
+    "test11111111": "file",
+    "test1111111111": "file",
+    "test4": "file",
+    "test11": "file",
+    "test1111": "file",
+    "test": "file",
+    "test3": "file",
+    "fff": {
+      "tetst_folder": "file"
+    }
+  }
+}

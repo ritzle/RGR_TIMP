@@ -1,0 +1,75 @@
+{
+  "comment": "много папок и файлов",
+  "backup_name": "backup_2025-05-31_06-32-04.zip",
+  "created_at": "2025-05-31_06-32-04",
+  "tree": {
+    "test11111": "file",
+    "test111": "file",
+    "test1111111": "file",
+    "test6": "file",
+    "test1": "file",
+    "test11111111111111": "file",
+    "test5": "file",
+    "test1.txt": "file",
+    "test111111111111": "file",
+    "test2.txt": "file",
+    "test111111": "file",
+    "test1111111111111": "file",
+    "test111111111": "file",
+    "test2": "file",
+    "test11111111111": "file",
+    "test7": "file",
+    "test11111111": "file",
+    "test1111111111": "file",
+    "test4": "file",
+    "test11": "file",
+    "test1111": "file",
+    "test": "file",
+    "test3": "file",
+    "fff123": {
+      "tetst_folder": "file"
+    },
+    "fff": {
+      "tetst_folder": "file"
+    },
+    "fff1": {
+      "tetst_folder": "file"
+    },
+    "fff12": {
+      "tetst_folder": "file"
+    },
+    "fff1234578": {
+      "tetst_folder": "file"
+    },
+    "fff123457891022123123": {
+      "tetst_folder": "file"
+    },
+    "fff123457891022": {
+      "tetst_folder": "file"
+    },
+    "fff1234": {
+      "tetst_folder": "file"
+    },
+    "fff12345789": {
+      "tetst_folder": "file"
+    },
+    "fff123457892222": {
+      "tetst_folder": "file"
+    },
+    "fff123457": {
+      "tetst_folder": "file"
+    },
+    "fff1234578910": {
+      "tetst_folder": "file"
+    },
+    "fff123457892222123123": {
+      "tetst_folder": "file"
+    },
+    "fff12345": {
+      "tetst_folder": "file",
+      "fff": {
+        "tetst_folder": "file"
+      }
+    }
+  }
+}

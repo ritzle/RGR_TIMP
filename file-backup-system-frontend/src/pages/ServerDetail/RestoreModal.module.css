@@ -63,38 +63,45 @@
   margin-top: 25px;
 }
 
-.confirmBtn,
-.cancelBtn {
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-  min-width: 120px;
-  text-align: center;
-}
-
+.cancelBtn,
 .confirmBtn {
-  background: linear-gradient(135deg, #2dd3b7, #1fa5e8);
-  color: white;
-  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease;
 }
 
-.confirmBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(45, 211, 183, 0.4);
-}
-
-.cancelBtn {
+/* Отмена */
+.cancelBtn,.confirmBtn {
   background: transparent;
-  color: #ccc;
-  border: 1px solid #ccc;
+  border: 1px solid #3e5175;
+  color: #a8b3cf;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease;
 }
 
 .cancelBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-color: white;
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+  opacity: 0.95;
+  background-color: rgba(255, 107, 107, 0.05);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(221, 53, 53, 0.25);
+}
+
+
+/* Подтвердить — зелёное наведение */
+.confirmBtn:hover:not(:disabled) {
+  border-color: #2dd3b7;
+  color: #2dd3b7;
+  opacity: 0.95;
+  background-color: rgba(45, 211, 183, 0.05);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(45, 211, 183, 0.25);
 }
 
 @media (prefers-reduced-motion: reduce) {

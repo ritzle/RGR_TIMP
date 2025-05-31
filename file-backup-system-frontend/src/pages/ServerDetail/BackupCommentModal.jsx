@@ -9,7 +9,7 @@ const BackupCommentModal = ({
   onClose,
   onConfirm,
   onCommentChange,
-  backupName // Добавляем новое свойство для имени бэкапа
+  backupName
 }) => {
   if (!show) return null;
 
@@ -19,11 +19,16 @@ const BackupCommentModal = ({
         {!isCompleted ? (
           <>
             <h3 className={styles.modalTitle}>Комментарий к бэкапу</h3>
-            <textarea
+              <textarea
               className={styles.textarea}
               placeholder="Введите комментарий..."
               value={comment}
-              onChange={(e) => onCommentChange(e.target.value)}
+              onChange={(e) => {
+                onCommentChange(e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
+              rows={3}
             />
             <div className={styles.modalActions}>
               <button
@@ -36,7 +41,7 @@ const BackupCommentModal = ({
               <button
                 onClick={onConfirm}
                 className={styles.confirmBtn}
-                disabled={loading || !comment.trim()}
+                disabled={loading}
               >
                 {loading ? "Создание..." : "Подтвердить"}
               </button>

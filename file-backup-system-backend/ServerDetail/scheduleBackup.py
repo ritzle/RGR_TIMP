@@ -123,3 +123,46 @@ def list_schedules():
     except Exception as e:
         logger.critical(f"Критическая ошибка: {str(e)}", exc_info=True)
         return jsonify({"message": "Внутренняя ошибка сервера"}), 500
+
+@ServerDetail_bp.route("/api/cancel-schedule", methods=["DELETE"])
+def cancel_schedule():
+    """
+    Отмена запланированного бэкапа на файловом сервере
+    """
+    logger.info("Обработка запроса на отмену расписания")
+
+    address = request.args.get("address")
+    job_id = request.args.get("job_id")
+
+    if not address or not job_id:
+        logger.warning("Не указан адрес сервера или ID задания")
+        return jsonify({"message": "Необходимо указать адрес сервера и ID расписания"}), 400
+
+    try:
+        endpoint = f"{address}/schedule/backup/cancel-schedule/{job_id}"
+        logger.info(f"Отправка DELETE-запроса на {endpoint}")
+
+        response = requests.delete(endpoint, timeout=5)
+
+        if response.status_code == 200:
+            logger.info(f"Расписание {job_id} успешно отменено")
+            return jsonify({
+                "message": f"Расписание {job_id} отменено",
+                "result": response.json()
+            }), 200
+
+        logger.error(f"Ошибка сервера при отмене: {response.status_code} - {response.text}")
+        return jsonify({
+            "message": response.json().get("message", "Ошибка при отмене расписания"),
+            "details": response.text
+        }), response.status_code
+
+    except requests.exceptions.Timeout:
+        logger.error("Таймаут соединения")
+        return jsonify({"message": "Сервер не отвечает"}), 408
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Ошибка соединения: {str(e)}")
+        return jsonify({"message": f"Ошибка подключения: {str(e)}"}), 502
+    except Exception as e:
+        logger.critical(f"Критическая ошибка: {str(e)}", exc_info=True)
+        return jsonify({"message": "Внутренняя ошибка сервера"}), 500

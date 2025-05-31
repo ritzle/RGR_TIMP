@@ -1,0 +1,225 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+    backdrop-filter: blur(3px);
+  }
+  
+  .backupName {
+    color: #2dd3b7; /* зелёный оттенок, как в вашем стиле */
+    font-weight: 600; /* чтобы выделить */
+  }
+  
+
+  .modal {
+    background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    color: white;
+    animation: modalAppear 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-origin: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  @keyframes modalAppear {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  .modalHeader {
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .modalHeader h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #ffffff;
+  }
+  
+  .closeButton {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #a8b3cf;
+    transition: color 0.3s ease;
+    padding: 5px;
+    line-height: 1;
+  }
+  
+  .closeButton:hover {
+    color: #ff6b6b;
+  }
+  
+  .fileTree {
+    padding: 10px 5px;
+    overflow-y: auto;
+    flex-grow: 1;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #3e5175 transparent;
+  }
+  
+  .fileTree::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .fileTree::-webkit-scrollbar-thumb {
+    background-color: #3e5175;
+    border-radius: 3px;
+  }
+  
+  .fileTree::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .fileItem {
+    margin: 8px 0;
+    font-family: 'Fira Code', monospace, sans-serif;
+    color: #e0e6f5;
+    transition: all 0.2s ease;
+  }
+  
+  .folderIcon, .fileIcon {
+    margin-right: 10px;
+    transition: transform 0.2s ease;
+  }
+  
+  .folder > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+    transition: color 0.2s ease;
+  }
+  
+  .folder > summary:hover {
+    color: #2dd3b7;
+  }
+  
+  .folder > summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  .folder[open] > summary .folderIcon {
+    transform: rotate(90deg);
+  }
+  
+  .file {
+    display: flex;
+    align-items: center;
+    padding: 6px 0 6px 26px;
+  }
+  
+  .file:hover {
+    color: #a8b3cf;
+  }
+  
+  .emptyMessage {
+    color: #a8b3cf;
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 1.1rem;
+  }
+  
+  .modalFooter {
+    padding: 20px 0 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: right;
+  }
+  
+  .okButton {
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid #3e5175;
+    border-radius: 8px;
+    color: #a8b3cf;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.2s ease;
+  }
+  
+  .okButton:hover {
+    border-color: #2dd3b7;
+    color: #2dd3b7;
+    background-color: rgba(45, 211, 183, 0.05);
+    transform: translateY(-1px);
+  }
+
+  .cancelBtn,
+.confirmBtn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease;
+  background: transparent;
+  border: 1px solid #3e5175;
+  color: #a8b3cf;
+}
+
+/* Отмена */
+.cancelBtn:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+  opacity: 0.95;
+  background-color: rgba(255, 107, 107, 0.05);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(221, 53, 53, 0.25);
+}
+
+  
+  /* Анимация для файлов */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .fileItem {
+    animation: fadeIn 0.3s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .fileItem:nth-child(1) { animation-delay: 0.1s; }
+  .fileItem:nth-child(2) { animation-delay: 0.15s; }
+  .fileItem:nth-child(3) { animation-delay: 0.2s; }
+  .fileItem:nth-child(4) { animation-delay: 0.25s; }
+  .fileItem:nth-child(5) { animation-delay: 0.3s; }
+  .fileItem:nth-child(n+6) { animation-delay: 0.35s; }
+  
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation: none !important;
+      transition: none !important;
+    }
+    
+    .fileItem {
+      opacity: 1;
+    }
+  }

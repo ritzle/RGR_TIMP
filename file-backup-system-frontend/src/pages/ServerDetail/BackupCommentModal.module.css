@@ -1,114 +1,256 @@
+/* Модальное окно */
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.modal {
+  background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  width: 90%;
+  max-width: 600px;
+  padding: 30px;
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid rgba(45, 211, 183, 0.2);
+  max-height: 95vh;
+  overflow-y: auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Заголовок */
+.modalTitle {
+  margin: 0 0 25px 0;
+  font-size: 1.5rem;
+  color: #2dd3b7;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Группы формы */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.inputLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #a8b3cf;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Поля ввода */
+.textInput,
+.textarea,
+.select,
+.timeInput,
+.numberInput {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #3e5175;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease, transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Обновлённая textarea */
+.textarea {
+  min-height: 100px;
+  max-height: 300px;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.4;
+  font-family: inherit;
+}
+
+/* Кастомный скролл */
+.textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.textarea::-webkit-scrollbar-thumb {
+  background-color: #2dd3b7;
+  border-radius: 4px;
+}
+
+/* Наведение на поле ввода */
+.textInput:hover,
+.textarea:hover,
+.select:hover,
+.timeInput:hover,
+.numberInput:hover {
+  border-color: #2dd3b7;
+  background-color: #37496c;
+}
+
+/* Акцентированное поле */
+.textInput:focus,
+.textarea:focus,
+.select:focus,
+.timeInput:focus,
+.numberInput:focus {
+  outline: none;
+  border-color: #2dd3b7;
+  box-shadow: 0 0 0 3px rgba(45, 211, 183, 0.2);
+  background-color: #2a3a5a;
+}
+
+/* Плейсхолдеры */
+.textInput::placeholder,
+.textarea::placeholder {
+  color: #7f8fa4;
+  opacity: 1;
+}
+
+/* Кнопки */
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cancelBtn,
+.confirmBtn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease;
+  background: transparent;
+  border: 1px solid #3e5175;
+  color: #a8b3cf;
+}
+
+/* Отмена */
+.cancelBtn:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+  opacity: 0.95;
+  background-color: rgba(255, 107, 107, 0.05);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(221, 53, 53, 0.25);
+}
+
+/* Подтвердить — зелёное наведение */
+.confirmBtn:hover:not(:disabled) {
+  border-color: #2dd3b7;
+  color: #2dd3b7;
+  opacity: 0.95;
+  background-color: rgba(45, 211, 183, 0.05);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 15px rgba(45, 211, 183, 0.25);
+}
+
+.confirmBtn:disabled {
+  background: #3e5175;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Ошибки */
+.error {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  padding: 10px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #ff6b6b;
+  margin: -0.5rem 0 1rem;
+}
+
+/* Стили для финального блока информации */
+.successInfo {
+  background-color: #2a3a5a;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  color: #dbeafe;
+  border: 1px solid rgba(45, 211, 183, 0.2);
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+  gap: 1rem;
+}
+
+.infoLabel {
+  font-weight: 600;
+  color: #a8b3cf;
+  font-size: 0.95rem;
+  min-width: 100px;
+}
+
+.infoValue {
+  flex-grow: 1;
+  font-size: 1rem;
+  color: #e0f2fe;
+  word-break: break-word;
+  text-align: right;
+
   
+  white-space: nowrap;       
+  overflow: hidden;          
+  text-overflow: ellipsis;  
+  max-width: 20ch;
+
+
+  transition: all 0.5s ease;
+
+  position: relative;        
+  cursor: pointer;           
+  max-width: 100%;           
+
+}
+
+.infoValue:hover {
+  white-space: normal;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 2;
+  max-height: none;
+}
+
+
+/* Адаптивность */
+@media (max-width: 600px) {
   .modal {
-    background-color: #2a3a5a;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    width: 90%;
-    max-width: 400px;
-    color: white;
-  }
-  
-  .modalTitle {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-    color: #ffffff;
-  }
-  
-  .textarea {
-    width: 100%;
-    min-height: 100px;
-    background-color: #3e5175;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    color: white;
-    resize: none;
-    font-family: inherit;
-    font-size: 1rem;
-  }
-  
-  .textarea:focus {
-    outline: 2px solid #2dd3b7;
-  }
-  
-  .modalActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .confirmBtn {
-    background: linear-gradient(135deg, #2dd3b7, #1fa5e8);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    min-width: 120px;
-  }
-  
-  .confirmBtn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(45, 211, 183, 0.4);
-  }
-  
-  .confirmBtn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-  
-  .cancelBtn {
-    background: transparent;
-    color: #ccc;
-    border: 1px solid #ccc;
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    min-width: 120px;
-  }
-  
-  .cancelBtn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border-color: white;
+    width: 95%;
+    padding: 20px;
   }
 
-  .successInfo {
-    margin: 20px 0;
+  .modalActions {
+    flex-direction: column;
   }
-  
-  .infoRow {
-    display: flex;
-    margin-bottom: 10px;
-    align-items: baseline;
+
+  .cancelBtn,
+  .confirmBtn {
+    width: 100%;
+    text-align: center;
   }
-  
-  .infoLabel {
-    font-weight: bold;
-    min-width: 100px;
-    margin-right: 10px;
-  }
-  
-  .infoValue {
-    flex: 1;
-    word-break: break-all;
-  }
+}

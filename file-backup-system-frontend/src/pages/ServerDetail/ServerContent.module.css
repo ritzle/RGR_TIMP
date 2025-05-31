@@ -15,29 +15,70 @@
   z-index: 1;
 }
 
-
-
-.contentContainer {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 20px;
-  gap: 20px;
+.columnsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  padding: 0 20px;
+  margin-bottom: 25px;
 }
 
-.mainContent {
-  display: flex;
-  flex-direction: column;
-  width: 95%;
-  margin: 0 auto;
+.listColumn {
+  background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(44, 31, 230, 0.2);
   position: relative;
-  z-index: 1;
-  min-height: fit-content;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.mainContent h2 {
-  font-size: 1.6rem;
-  margin-bottom: 10px;
+/* Затемнение и усиление тени при наведении */
+.listColumn:hover {
+  background: linear-gradient(145deg, #24334e, #192536); /* немного темнее */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+
+.listTitle {
+  color: #fff;
+  font-size: 1.5rem;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+  cursor: default;
+}
+
+.listTitle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 35%;
+  height: 3px;
+  background-color: #2dd3b7;
+  transition: width 0.3s ease;
+}
+
+.listColumn:hover .listTitle::after {
+  width: 100%;
+}
+
+
+
+
+.backupListContainer {
+  position: relative;
+}
+
+.backupItem.selected {
+  z-index: 1; 
+  position: relative;
+}
+
+.scheduleItem {
+  position: static !important;
+  z-index: auto !important;
 }
 
 .actions {
@@ -83,116 +124,23 @@
   background-color: #c72626;
 }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal {
-  background-color: #2a3a5a;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  width: 90%;
-  max-width: 400px;
-  color: white;
-}
-
-.modalTitle {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.4rem;
-  color: #ffffff;
-}
-
-.modalActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.confirmBtn,
-.cancelBtn {
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-  min-width: 120px;
-  text-align: center;
-}
-
-.confirmBtn {
-  background: linear-gradient(135deg, #2dd3b7, #1fa5e8);
-  color: white;
-  border: none;
-}
-
-.confirmBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(45, 211, 183, 0.4);
-}
-
-.cancelBtn {
-  background: transparent;
-  color: #ccc;
-  border: 1px solid #ccc;
-}
-
-.cancelBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-color: white;
-}
-
-.textarea {
-  width: 100%;
-  min-height: 100px;
-  background-color: #3e5175;
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  color: white;
-  resize: none;
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-.Back-title{
-  margin-bottom: 15px;
-}
-
-.columnsContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  padding: 0 20px;
-  margin-bottom: 25px;
-}
-
-.listColumn{
-  
-  background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(44, 31, 230, 0.2);
+.backupColumn{
   z-index: 1;
 }
 
-.listTitle {
-  color: #fff;
-  font-size: 1.2rem;
-  margin: 0 0 15px 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+.disabledButton {
+  background-color: #3e5175 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+}
+
+
+.scheduleButton {
+  background-color: #2dd3b7;
+  transition: all 0.3s;
+}
+
+.scheduleButton:not(:disabled):hover {
+  background-color: #26bba3;
 }
