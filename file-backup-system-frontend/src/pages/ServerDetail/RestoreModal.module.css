@@ -104,6 +104,13 @@
   box-shadow: 0 6px 15px rgba(45, 211, 183, 0.25);
 }
 
+.errorMessage {
+  color: #e53935;
+  margin: 10px 0;
+  font-weight: 500;
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

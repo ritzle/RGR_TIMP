@@ -22,7 +22,14 @@ def schedule_backup():
     data = request.get_json() or {}
     schedule_type = data.get("type")
     time_value = data.get("time")
-    comment = data.get("comment", "").strip()
+    
+
+    comment = data.get("comment")
+    if comment is None:
+        comment = ""
+    else:
+        comment = comment.strip()
+
 
     if not schedule_type or not time_value:
         logger.warning("Не указан тип расписания или время")

@@ -6,6 +6,7 @@ import ScheduleModal from "./ScheduleModal";
 import ScheduleList from "./ScheduleList";
 import BackupCommentModal from "./BackupCommentModal";
 import BackupFileTreeModal from "./BackupFileTreeModal";
+import DeleteConfirmModal from  "./DeleteConfirmModal";
 
 
 //TODO для режима восстановления добавить окно при ошибки/
@@ -18,6 +19,11 @@ const ServerContent = ({ serverAddress }) => {
   const [showModal, setShowModal] = useState(false);
   const [loadingBackup, setLoadingBackup] = useState(false);
   const [loadingRestore, setLoadingRestore] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+
+  const [backupToDelete, setBackupToDelete] = useState(null);
+
 
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
@@ -86,7 +92,7 @@ const ServerContent = ({ serverAddress }) => {
     const interval = setInterval(() => {
       loadBackups();
       loadSchedules();
-    }, 30000);
+    }, 10000);
     
     return () => clearInterval(interval);
   }, [loadBackups, loadSchedules]);
@@ -115,29 +121,46 @@ const ServerContent = ({ serverAddress }) => {
     }
   };
 
-  const handleDeleteBackup = async (backupName) => {
-    if (!window.confirm(`Удалить бэкап ${backupName}?`)) return;
+  const confirmDeleteBackup = async () => {
+    if (!backupToDelete) return;
+  
+    setDeleteError(null);
     setDeletingBackup(true);
+  
     try {
       const response = await fetch(
-        `http://localhost:5000/api/remove-backup?` + 
-        `backupName=${encodeURIComponent(backupName)}&` +
+        `http://localhost:5000/api/remove-backup?` +
+        `backupName=${encodeURIComponent(backupToDelete)}&` +
         `address=${encodeURIComponent(serverAddress)}`,
         { method: "DELETE" }
       );
+  
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Ошибка удаления");
+        const err = new Error(data.message || "Ошибка удаления");
+        err.backup_name = data.backup_name;
+        throw err;
       }
+  
       await loadBackups();
-      alert("Бэкап успешно удалён");
+      setShowDeleteModal(false);
+      setBackupToDelete(null);
     } catch (error) {
-      console.error("Ошибка удаления:", error);
-      alert(error.message);
+      setDeleteError(error);
     } finally {
-      setDeletingBackup(false);
+      setDeletingBackup(false);  // сбрасываем состояние в любом случае
     }
   };
+  
+  
+  
+  const handleDeleteRequest = (backupName) => {
+    setBackupToDelete(backupName);
+    setShowDeleteModal(true);
+    setDeleteError(null); 
+  };
+  
+  
 
   const handleConfirmRestore = async () => {
     if (!serverAddress || !selectedBackup) return;
@@ -223,6 +246,7 @@ const ServerContent = ({ serverAddress }) => {
     setBackupCompleted(false);
   };
 
+
   return (
     <div className={styles.wrapper}>
       {restoreMode && <div className={styles.globalOverlay}></div>}
@@ -235,10 +259,11 @@ const ServerContent = ({ serverAddress }) => {
             restoreMode={restoreMode}
             selectedBackup={selectedBackup}
             setSelectedBackup={setSelectedBackup}
-            onDeleteBackup={handleDeleteBackup}
-            loading={loadingBackups || deletingBackup}
+            loading={loadingBackups}  // Убрали deletingBackup, чтобы кнопка не блокировалась из-за удаления
             onBackupClick={handleBackupItemClick}
+            onDeleteBackup={handleDeleteRequest}
           />
+
         </section>
 
         <section className={`${styles.listColumn} ${styles.scheduleColumn}`}>
@@ -250,6 +275,7 @@ const ServerContent = ({ serverAddress }) => {
             onCancelSchedule={handleCancelSchedule}
           />
         </section>
+
       </div>
 
       <div className={styles.actions}>
@@ -280,6 +306,10 @@ const ServerContent = ({ serverAddress }) => {
         </button>
       </div>
 
+
+
+
+
       <BackupCommentModal
         show={showCommentModal}
         comment={comment}
@@ -290,6 +320,20 @@ const ServerContent = ({ serverAddress }) => {
         onConfirm={() => handleCreateBackup(comment)}
         onCommentChange={setComment}
       />
+
+      {showDeleteModal && (
+                  <DeleteConfirmModal
+                    backupName={backupToDelete}
+                    onCancel={() => {
+                      setShowDeleteModal(false);
+                      setBackupToDelete(null);
+                      setDeleteError(null);
+                    }}
+                    onConfirm={confirmDeleteBackup}
+                    isDeleting={deletingBackup}  // Передаем для блокировки кнопки только в модальном окне
+                    error={deleteError}
+                  />
+                )}
 
       {showScheduleModal && (
         <ScheduleModal
@@ -318,7 +362,12 @@ const ServerContent = ({ serverAddress }) => {
           backupName={selectedBackup}
         />
       )}
+
+
     </div>
+
+        
+
   );
 };
 

@@ -29,6 +29,15 @@ def api_remove_backup():
             logger.info(f"Бэкап {backup_name} успешно удален")
             logger.debug("-------------------------------------------------------------")
             return jsonify({"message": "Бэкап успешно удалён"}), 200
+
+        elif response.status_code == 404:
+            # Специальная обработка, если бэкап не найден
+            logger.warning(f"Бэкап {backup_name} не найден на сервере {address}")
+            logger.debug("-------------------------------------------------------------")
+            return jsonify({"message": "Бэкап не найден",
+                            "backup_name": backup_name
+                            }), 404
+
         else:
             try:
                 message = response.json().get("message", "Ошибка на сервере")

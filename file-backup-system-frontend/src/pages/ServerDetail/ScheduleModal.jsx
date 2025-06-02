@@ -29,7 +29,7 @@ const ScheduleModal = ({ onClose, onCreate }) => {
     const result = await onCreate(
       scheduleType,
       scheduleType === "daily" ? time : parseInt(minutes),
-      comment
+      comment.trim()
     );
     
     if (result.success) {

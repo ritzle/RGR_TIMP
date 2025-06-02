@@ -1,0 +1,187 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+  }
+  
+  .modal {
+    background: linear-gradient(145deg, #2a3a5a, #1e2a3e);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    animation: fadeIn 0.3s ease-out;
+    border: 1px solid rgba(45, 211, 183, 0.2);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #a8b3cf;
+    font-weight: 500;
+  }
+  
+  /* Стили для инпутов */
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #3e5175;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s;
+    box-sizing: border-box;
+  }
+  
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #2dd3b7;
+    box-shadow: 0 0 0 3px rgba(45, 211, 183, 0.2);
+    background-color: #2a3a5a;
+  }
+  
+  input:hover,
+  textarea:hover,
+  select:hover {
+    border-color: #2dd3b7;
+    box-shadow: 0 0 8px rgba(45, 211, 183, 0.5);
+    background-color: #2a3a5a;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+  
+  input::placeholder,
+  textarea::placeholder {
+    color: #7f8fa4;
+    opacity: 1;
+  }
+  
+  /* Ошибка */
+  .error {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    padding: 10px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 6px;
+    border-left: 3px solid #ff6b6b;
+    margin: -0.5rem 0 1rem;
+  }
+  
+  /* Кнопки действий */
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .actions button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.2s ease;
+    background: transparent;
+    border: 1px solid #3e5175;
+    color: #a8b3cf;
+  }
+  
+  .actions .cancelBtn:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.05);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 6px 15px rgba(221, 53, 53, 0.25);
+  }
+  
+  .actions .confirmBtn:hover:not(:disabled) {
+    border-color: #2dd3b7;
+    color: #2dd3b7;
+    background-color: rgba(45, 211, 183, 0.05);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 6px 15px rgba(45, 211, 183, 0.25);
+  }
+  
+  .actions .confirmBtn:disabled {
+    background: #3e5175;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .form button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2dd3b7, #1abc9c);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(45, 211, 183, 0.1);
+  }
+  
+  .form button:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(45, 211, 183, 0.45);
+    background: linear-gradient(135deg, #1abc9c, #2dd3b7);
+  }
+  
+  .form button:disabled {
+    background: #3e5175;
+    color: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+  }
+  
+  
+  /* Адаптив */
+  @media (max-width: 600px) {
+    .modal {
+      width: 90%;
+      padding: 20px;
+    }
+  
+    .actions {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .actions button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  

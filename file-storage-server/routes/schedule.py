@@ -58,7 +58,7 @@ def create_backup_with_comment(comment):
     meta_info = {
         "created_at": timestamp,
         "backup_name": backup_name,
-        "comment": comment,
+        "comment": comment if comment is not None else "",
         "tree": tree
     }
 
@@ -82,24 +82,27 @@ def load_scheduled_jobs():
                 jobs = json.load(f)
                 for job in jobs:
                     try:
+                        comment = job.get('comment', 'Scheduled backup')  # Значение по умолчанию
                         if job['trigger_type'] == 'interval':
-                            comment = f"По расписанию: каждые {job['minutes']} минут"
+                            system_comment = f"По расписанию: каждые {job['minutes']} минут"
                             scheduler.add_job(
                                 create_backup_with_comment,
                                 'interval',
                                 minutes=job['minutes'],
-                                args=[comment],
-                                id=job['id']
+                                args=[system_comment],
+                                id=job['id'],
+                                name=comment or "Scheduled interval backup"
                             )
                         elif job['trigger_type'] == 'cron':
-                            comment = f"По расписанию: ежедневно в {job['hour']:02d}:{job['minute']:02d}"
+                            system_comment = f"По расписанию: ежедневно в {job['hour']:02d}:{job['minute']:02d}"
                             scheduler.add_job(
                                 create_backup_with_comment,
                                 'cron',
                                 hour=job['hour'],
                                 minute=job['minute'],
-                                args=[comment],
-                                id=job['id']
+                                args=[system_comment],
+                                id=job['id'],
+                                name=comment or "Scheduled cron backup"
                             )
                     except Exception as e:
                         print(f"Error loading job {job['id']}: {str(e)}")
@@ -137,6 +140,7 @@ def schedule_timer_backup():
     data = request.get_json()
     minutes = data.get("minutes")
     user_comment = data.get("comment", "Scheduled backup (timer)")
+    
 
     if not minutes or not isinstance(minutes, int) or minutes <= 0:
         return jsonify({
@@ -160,7 +164,7 @@ def schedule_timer_backup():
         args=[],
         kwargs={},
         replace_existing=False,
-        name=user_comment  # альтернативно можно хранить здесь
+        name=user_comment or "Scheduled timer backup"
     )
 
     # Сохраняем в файл
@@ -212,7 +216,7 @@ def schedule_time_backup():
         args=[],
         kwargs={},
         replace_existing=False,
-        name=user_comment
+        name=user_comment or "Scheduled daily backup"
     )
 
     save_scheduled_jobs()

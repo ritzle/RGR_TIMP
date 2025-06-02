@@ -19,8 +19,27 @@
 
 .mainArea {
   flex: 1;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   box-sizing: border-box;
   height: 100vh;
+  overflow-y: auto;
+}
+
+
+.sshColumn {
+
+  padding: 16px;
+  flex-direction: column;
+}
+
+.sshFormWrapper {
+  max-width: 600px;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #28364d;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  align-self: flex-start; /* чтобы не растягивался */
 }
