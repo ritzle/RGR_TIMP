@@ -163,3 +163,9 @@
   animation: pulse 1.5s infinite ease-in-out;
 }
 
+.online {
+  color: #2dd3b7;
+}
+.offline {
+  color: #ff6b6b;
+}

@@ -2,34 +2,35 @@ import React from "react";
 import styles from "./BackupFileTreeModal.module.css";
 
 const FileItem = ({ name, data, level = 0 }) => {
-  const isFile = data === "file" || typeof data !== "object";
-  
-  return (
-    <div className={styles.fileItem} style={{ paddingLeft: `${level * 20}px` }}>
-      {isFile ? (
-        <span className={styles.file}>
-          <span className={styles.fileIcon}>📄</span>
-          {name}
-        </span>
-      ) : (
-        <details open className={styles.folder}>
-          <summary>
-            <span className={styles.folderIcon}>📁</span>
+    const isFile = data === "file" || typeof data !== "object";
+    
+    return (
+      <div className={styles.fileItem} style={{ paddingLeft: `${level * 20}px` }}>
+        {isFile ? (
+          <span className={styles.file}>
+            <span className={styles.fileIcon}>📄</span>
             {name}
-          </summary>
-          {Object.entries(data).map(([childName, childData]) => (
-            <FileItem 
-              key={childName} 
-              name={childName} 
-              data={childData} 
-              level={level + 1} 
-            />
-          ))}
-        </details>
-      )}
-    </div>
-  );
-};
+          </span>
+        ) : (
+          <details className={styles.folder}>
+            <summary>
+              <span className={styles.folderIcon}>📁</span>
+              {name}
+            </summary>
+            {Object.entries(data).map(([childName, childData]) => (
+              <FileItem 
+                key={childName} 
+                name={childName} 
+                data={childData} 
+                level={level + 1} 
+              />
+            ))}
+          </details>
+        )}
+      </div>
+    );
+  };
+  
 
 const BackupFileTreeModal = ({ show, onClose, files, backupName }) => {
     if (!show) return null;

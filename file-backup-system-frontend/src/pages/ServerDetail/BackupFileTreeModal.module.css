@@ -172,7 +172,7 @@
     transform: translateY(-1px);
   }
 
-  .cancelBtn,
+.cancelBtn,
 .confirmBtn {
   padding: 12px 24px;
   border-radius: 8px;

@@ -20,13 +20,27 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
-def create_backup_with_comment(comment=""):
+def build_file_tree(files):
+    tree = {}
+    for path in files:
+        parts = path.split(os.sep)
+        current = tree
+        for i, part in enumerate(parts):
+            if i == len(parts) - 1:
+                current[part] = "file"
+            else:
+                current = current.setdefault(part, {})
+    return tree
+
+def create_backup_with_comment(comment):
     if not os.path.exists(FILES_FOLDER) or not os.listdir(FILES_FOLDER):
         return False
 
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     backup_name = f"backup_{timestamp}.zip"
     backup_path = os.path.join(BACKUP_FOLDER, backup_name)
+    
+    relative_paths = []
 
     with zipfile.ZipFile(backup_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         for root, _, files in os.walk(FILES_FOLDER):
@@ -34,13 +48,32 @@ def create_backup_with_comment(comment=""):
                 file_path = os.path.join(root, file)
                 arcname = os.path.relpath(file_path, FILES_FOLDER)
                 zipf.write(file_path, arcname)
+                relative_paths.append(arcname)
+
+
+    tree = build_file_tree(relative_paths)
+
+
+    # Создаём JSON-файл с описанием рядом с бэкапом
+    meta_info = {
+        "created_at": timestamp,
+        "backup_name": backup_name,
+        "comment": comment,
+        "tree": tree
+    }
+
+    meta_path = os.path.join(BACKUP_FOLDER, f"{backup_name}.json")
+    with open(meta_path, 'w', encoding='utf-8') as f:
+        json.dump(meta_info, f, ensure_ascii=False, indent=2)
 
     return {
         "success": True,
         "backup_name": backup_name,
         "timestamp": timestamp,
-        "comment": comment
+        "comment": comment,
+        "tree": tree
     }
+
 
 def load_scheduled_jobs():
     if Path(SCHEDULED_JOBS_FILE).exists():
@@ -50,20 +83,22 @@ def load_scheduled_jobs():
                 for job in jobs:
                     try:
                         if job['trigger_type'] == 'interval':
+                            comment = f"По расписанию: каждые {job['minutes']} минут"
                             scheduler.add_job(
                                 create_backup_with_comment,
                                 'interval',
                                 minutes=job['minutes'],
-                                args=[job['comment']],
+                                args=[comment],
                                 id=job['id']
                             )
                         elif job['trigger_type'] == 'cron':
+                            comment = f"По расписанию: ежедневно в {job['hour']:02d}:{job['minute']:02d}"
                             scheduler.add_job(
                                 create_backup_with_comment,
                                 'cron',
                                 hour=job['hour'],
                                 minute=job['minute'],
-                                args=[job['comment']],
+                                args=[comment],
                                 id=job['id']
                             )
                     except Exception as e:
@@ -78,7 +113,7 @@ def save_scheduled_jobs():
         job_data = {
             'id': job.id,
             'trigger_type': 'interval' if 'interval' in trigger else 'cron',
-            'comment': job.args[0] if job.args else "",
+            'comment': job.name or "",  # <-- теперь комментарий из имени
             'created_at': datetime.now().isoformat()
         }
 
@@ -96,11 +131,12 @@ def save_scheduled_jobs():
     with open(SCHEDULED_JOBS_FILE, 'w') as f:
         json.dump(jobs, f, indent=2, ensure_ascii=False)
 
+
 @schedule_bp.route("/backup/create-schedule_backup-timer", methods=["POST"])
 def schedule_timer_backup():
     data = request.get_json()
     minutes = data.get("minutes")
-    comment = data.get("comment", "Scheduled backup (timer)")
+    user_comment = data.get("comment", "Scheduled backup (timer)")
 
     if not minutes or not isinstance(minutes, int) or minutes <= 0:
         return jsonify({
@@ -111,14 +147,23 @@ def schedule_timer_backup():
 
     job_id = f"timer_{minutes}min_{datetime.now().timestamp()}"
 
+    # сохраняем user_comment в args, а system_comment используем при вызове
+    def job_func():
+        system_comment = f"По расписанию: каждые {minutes} минут"
+        return create_backup_with_comment(system_comment)
+
     scheduler.add_job(
-        create_backup_with_comment,
+        job_func,
         'interval',
         minutes=minutes,
-        args=[comment],
-        id=job_id
+        id=job_id,
+        args=[],
+        kwargs={},
+        replace_existing=False,
+        name=user_comment  # альтернативно можно хранить здесь
     )
 
+    # Сохраняем в файл
     save_scheduled_jobs()
 
     return jsonify({
@@ -127,17 +172,18 @@ def schedule_timer_backup():
             "job_id": job_id,
             "type": "interval",
             "minutes": minutes,
-            "comment": comment,
+            "comment": user_comment,
             "display_text": f"Каждые {minutes} минут",
             "next_run": str(scheduler.get_job(job_id).next_run_time)
         }
     }), 200
 
+
 @schedule_bp.route("/backup/create-schedule_backup-time", methods=["POST"])
 def schedule_time_backup():
     data = request.get_json()
     time_str = data.get("time")
-    comment = data.get("comment", "Scheduled backup (daily)")
+    user_comment = data.get("comment", "Scheduled backup (daily)")
 
     try:
         hour, minute = map(int, time_str.split(":"))
@@ -152,13 +198,21 @@ def schedule_time_backup():
 
     job_id = f"daily_{hour:02d}{minute:02d}_{datetime.now().timestamp()}"
 
+    def job_func():
+        system_comment = f"По расписанию: {minute}"
+        return create_backup_with_comment(system_comment)
+    
+
     scheduler.add_job(
-        create_backup_with_comment,
+        job_func,
         'cron',
         hour=hour,
         minute=minute,
-        args=[comment],
-        id=job_id
+        id=job_id,
+        args=[],
+        kwargs={},
+        replace_existing=False,
+        name=user_comment
     )
 
     save_scheduled_jobs()
@@ -169,11 +223,12 @@ def schedule_time_backup():
             "job_id": job_id,
             "type": "cron",
             "time": f"{hour:02d}:{minute:02d}",
-            "comment": comment,
+            "comment": user_comment,
             "display_text": f"Ежедневно в {hour:02d}:{minute:02d}",
             "next_run": str(scheduler.get_job(job_id).next_run_time)
         }
     }), 200
+
 
 @schedule_bp.route("/backup/list-schedules", methods=["GET"])
 def list_schedules():
@@ -182,7 +237,7 @@ def list_schedules():
         trigger = str(job.trigger)
         job_data = {
             "id": job.id,
-            "comment": job.args[0] if job.args else "",
+            "comment": job.name,
             "next_run": job.next_run_time.isoformat() if job.next_run_time else None,
             "status": "active"
         }

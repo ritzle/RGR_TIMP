@@ -7,6 +7,10 @@ import ScheduleList from "./ScheduleList";
 import BackupCommentModal from "./BackupCommentModal";
 import BackupFileTreeModal from "./BackupFileTreeModal";
 
+
+//TODO для режима восстановления добавить окно при ошибки/
+// сделать окно для удаления
+
 const ServerContent = ({ serverAddress }) => {
   const [backups, setBackups] = useState({});
   const [selectedBackup, setSelectedBackup] = useState(null);
@@ -75,6 +79,16 @@ const ServerContent = ({ serverAddress }) => {
   useEffect(() => {
     loadBackups();
     loadSchedules();
+  }, [loadBackups, loadSchedules]);
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadBackups();
+      loadSchedules();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, [loadBackups, loadSchedules]);
 
   const handleCreateBackup = async (comment) => {

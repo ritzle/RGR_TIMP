@@ -9,6 +9,7 @@ const ServerDetail = () => {
   const navigate = useNavigate();
 
   const [status, setStatus] = useState("Загрузка...");
+  const [flaskStatus, setFlaskStatus] = useState("Проверка...");
   const [address, setAddress] = useState("");
 
   const handleBack = () => navigate("/home");
@@ -22,26 +23,28 @@ const ServerDetail = () => {
         const res = await fetch(`http://localhost:5000/api/get-user-servers?email=${user.email}`);
         const allServers = await res.json();
         const target = allServers.find((srv) => srv.name === name);
-        
+
         if (target) {
           setAddress(target.ip);
           checkStatus(target.ip);
         } else {
           setStatus("Сервер не найден");
+          setFlaskStatus("❌ Неизвестно");
         }
       } catch (err) {
         console.error("Ошибка загрузки сервера", err);
         setStatus("Ошибка при загрузке");
+        setFlaskStatus("❌ Неизвестно");
       }
     };
 
     const checkStatus = async (address) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/ping-server?address=${encodeURIComponent(address)}`);
+        const res = await fetch(`http://localhost:5000/api/ping-host?address=${encodeURIComponent(address)}`);
         const data = await res.json();
-        
-        switch(data.status) {
-          case "OK": 
+
+        switch (data.status) {
+          case "OK":
             setStatus("🟢 Активен");
             break;
           case "timeout":
@@ -50,8 +53,23 @@ const ServerDetail = () => {
           default:
             setStatus("🔴 Недоступен");
         }
+
+        checkFlaskStatus(address);
       } catch {
         setStatus("🔴 Ошибка подключения");
+      }
+    };
+
+    const checkFlaskStatus = async (address) => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/ping-server?address=${encodeURIComponent(address)}`);
+        if (res.ok) {
+          setFlaskStatus("🟢 Работает");
+        } else {
+          setFlaskStatus("🔴 Не отвечает");
+        }
+      } catch {
+        setFlaskStatus("🔴 Не отвечает");
       }
     };
 
@@ -65,14 +83,13 @@ const ServerDetail = () => {
           name={name} 
           address={address} 
           status={status} 
+          flaskStatus={flaskStatus}
           onBack={handleBack} 
         />
       </div>
-      
+
       <div className={styles.mainArea}>
-        <ServerContent
-          serverAddress={address}
-        />
+        <ServerContent serverAddress={address} />
       </div>
     </div>
   );
