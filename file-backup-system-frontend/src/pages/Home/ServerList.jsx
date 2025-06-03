@@ -2,16 +2,21 @@ import React from "react";
 import styles from "./ServerList.module.css";
 import ServerCard from "./ServerCard";
 
-const ServerList = ({ servers, handleCardClick }) => {
+const ServerList = ({ servers, handleCardClick, onRequestDelete }) => {
   return (
     <section className={styles.serverList}>
-      <h2 className={styles.heading}>Сервера</h2>
-      <div className={styles.cards}>
-        {servers.map((server, index) => (
-          <ServerCard key={index} server={server} onClick={handleCardClick} />
-        ))}
-      </div>
-    </section>
+  <h2 className={styles.heading}>Сервера</h2>
+  <div className={styles.cards}>
+    {servers.map((server, index) => (
+      <ServerCard
+        key={index}
+        server={server}
+        onClick={handleCardClick}
+        onRequestDelete={() => onRequestDelete(server)}
+      />
+    ))}
+  </div>
+</section>
   );
 };
 

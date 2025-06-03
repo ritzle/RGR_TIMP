@@ -35,7 +35,7 @@ const ServerInfo = ({ name, address, status, flaskStatus, onBack }) => {
         </div>
         
         <div className={styles.infoItem} style={getAnimationDelay(2)}>
-          <span className={styles.infoLabel}>Статус:</span>
+          <span className={styles.infoLabel}>ssh-сервер:</span>
           <span className={`${styles.infoValue} ${getStatusClass(status)}`}>
             {status}
             <span className={styles.statusIndicator}></span>

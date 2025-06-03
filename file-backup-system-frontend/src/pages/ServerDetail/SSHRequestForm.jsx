@@ -4,6 +4,7 @@ import styles from "./SSHRequestForm.module.css";
 const SSHRequestForm = ({ serverAddress, onConnect }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [port, setPort] = useState("22"); // добавлено состояние для порта, по умолчанию 22
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -12,7 +13,7 @@ const SSHRequestForm = ({ serverAddress, onConnect }) => {
     setLoading(true);
     setError(null);
     try {
-      await onConnect(username, password);
+      await onConnect(username, password, Number(port)); // передаем порт как число
     } catch (err) {
       setError(err.message || "Ошибка SSH подключения");
     } finally {
@@ -41,6 +42,18 @@ const SSHRequestForm = ({ serverAddress, onConnect }) => {
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
+            disabled={loading}
+          />
+        </label>
+        <label>
+          Порт:
+          <input
+            type="number"
+            value={port}
+            onChange={e => setPort(e.target.value)}
+            required
+            min="1"
+            max="65535"
             disabled={loading}
           />
         </label>

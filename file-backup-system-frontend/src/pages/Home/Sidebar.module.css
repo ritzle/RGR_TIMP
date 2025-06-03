@@ -1,26 +1,40 @@
 .sidebar {
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  cursor: default; /* чтобы hover срабатывал */
+}
 
-  }
-  
-  .emptyPanel {
-    flex: 1;
-    background-color: #2a3a5a;
-    padding: 20px;
-    border-radius: 16px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    opacity: 0.6;
-    text-align: center;
-  }
-  
-  .description {
-    font-size: 2rem;
-    max-width: 250px;
-  }
+/* Сама панель с рекламой */
+.emptyPanel {
+  flex: 1;
+  background-color: #2a3a5a;
+  padding: 20px;
+  border-radius: 16px;
+  color: white;
+  display: flex;
+  flex-direction: column; /* чтобы линия была под заголовком */
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  opacity: 0.6;
+  text-align: center;
+  position: relative;
+}
+
+/* Заголовок */
+.description {
+  font-size: 2rem;
+  max-width: 250px;
+  margin: 0;
+  padding-bottom: 8px;
+  user-select: none;
+}
+
+
+
+/* При наведении на весь сайдбар линия увеличивается */
+.sidebar:hover .underline {
+  width: 120px;
+}

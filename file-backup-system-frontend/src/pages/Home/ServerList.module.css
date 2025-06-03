@@ -6,6 +6,7 @@
   min-width: 0;
   padding: 20px;
   transition: all 0.3s ease;
+  overflow: hidden; /* ограничим прокрутку внутри .cards */
 }
 
 .serverList:hover {
@@ -43,8 +44,38 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  overflow-y: auto;
+  max-height: calc(100vh - 160px);
   animation: fadeIn 0.5s ease-out;
+  padding: 30px 5px 20px 0;
 }
+
+.cards > * {
+  scroll-snap-align: start;
+}
+
+
+.cards::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cards::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.cards::-webkit-scrollbar-thumb {
+  background-color: #2dd3b7;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+}
+
+.cards::-webkit-scrollbar-thumb:hover {
+  background-color: #1fa5e8;
+}
+
+
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }

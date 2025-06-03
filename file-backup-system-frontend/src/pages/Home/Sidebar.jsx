@@ -9,12 +9,13 @@ const Sidebar = ({ name, address, setName, setIp, handleAddServer, ipError }) =>
         name={name}
         address={address}
         setName={setName}
-        setAddress={setIp} // Передаем setIp как setAddress
+        setAddress={setIp}
         handleAddServer={handleAddServer}
         ipError={ipError}
       />
       <div className={styles.emptyPanel}>
         <h2 className={styles.description}>Тут могла быть ваша реклама</h2>
+        <div className={styles.underline} />
       </div>
     </aside>
   );

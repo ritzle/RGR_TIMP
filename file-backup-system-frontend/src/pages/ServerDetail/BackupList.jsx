@@ -15,7 +15,6 @@ const BackupList = ({ backups, ...rest }) => (
               if (rest.restoreMode) {
                 rest.setSelectedBackup(name);
               } else {
-                // Передаем имя бэкапа и tree-структуру
                 rest.onBackupClick(name, data.tree);
               }
             }}
@@ -35,16 +34,29 @@ const BackupList = ({ backups, ...rest }) => (
               </div>
             </div>
 
-            <button
-              className={styles.deleteButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                rest.onDeleteBackup(name);
-              }}
-              disabled={rest.loading}
-            >
-              Удалить
-            </button>
+            <div className={styles.buttonGroup}>
+              <button
+                className={styles.downloadButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  rest.onDownloadBackup(name);
+                }}
+                disabled={rest.loading}
+              >
+                Скачать
+              </button>
+
+              <button
+                className={styles.deleteButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  rest.onDeleteBackup(name);
+                }}
+                disabled={rest.loading}
+              >
+                Удалить
+              </button>
+            </div>
           </div>
         ))
       ) : (

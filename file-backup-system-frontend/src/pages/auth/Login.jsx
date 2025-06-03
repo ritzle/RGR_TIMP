@@ -32,15 +32,15 @@ function Login({ initialEmail = "", initialPassword = "" }) {
       newErrors.email = "Неверный формат email";
     }
 
-    if (!password.trim()) {
-      newErrors.password = "Введите пароль";
-    } else if (password.length < 8) {
-      newErrors.password = "Пароль должен содержать минимум 8 символов";
-    } else if (!/[A-Z]/.test(password)) {
-      newErrors.password = "Должна быть хотя бы одна заглавная буква";
-    } else if (!/[0-9]/.test(password)) {
-      newErrors.password = "Должна быть хотя бы одна цифра";
-    }
+    // if (!password.trim()) {
+    //   newErrors.password = "Введите пароль";
+    // } else if (password.length < 8) {
+    //   newErrors.password = "Пароль должен содержать минимум 8 символов";
+    // } else if (!/[A-Z]/.test(password)) {
+    //   newErrors.password = "Должна быть хотя бы одна заглавная буква";
+    // } else if (!/[0-9]/.test(password)) {
+    //   newErrors.password = "Должна быть хотя бы одна цифра";
+    // }
 
     setErrors(newErrors);
     setServerError("");

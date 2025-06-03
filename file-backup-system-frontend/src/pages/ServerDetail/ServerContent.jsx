@@ -121,6 +121,35 @@ const ServerContent = ({ serverAddress }) => {
     }
   };
 
+
+  const handleDownloadBackup = async (backupName) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/download-backup?address=${encodeURIComponent(serverAddress)}&backup=${encodeURIComponent(backupName)}`
+      );
+      
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Ошибка при скачивании бэкапа");
+      }
+  
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+  
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${backupName}.zip`; // Или любое другое расширение
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Ошибка скачивания бэкапа:", error);
+      alert("Не удалось скачать бэкап: " + error.message);
+    }
+  };
+  
+
   const confirmDeleteBackup = async () => {
     if (!backupToDelete) return;
   
@@ -259,10 +288,12 @@ const ServerContent = ({ serverAddress }) => {
             restoreMode={restoreMode}
             selectedBackup={selectedBackup}
             setSelectedBackup={setSelectedBackup}
-            loading={loadingBackups}  // Убрали deletingBackup, чтобы кнопка не блокировалась из-за удаления
+            loading={loadingBackups}
             onBackupClick={handleBackupItemClick}
             onDeleteBackup={handleDeleteRequest}
+            onDownloadBackup={handleDownloadBackup}  
           />
+
 
         </section>
 

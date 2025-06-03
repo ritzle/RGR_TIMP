@@ -1,10 +1,18 @@
-version: "3.8"
-
 services:
   storage-server:
-    build: .
+    build:
+      context: ./storage-server
+      dockerfile: Dockerfile
     ports:
       - "5001:5001"
     volumes:
-      - ./storage:/app/storage
+      - ./storage-server/storage:/app/storage
+    restart: unless-stopped
+
+  ssh-server:
+    build:
+      context: ./ssh-server
+      dockerfile: Dockerfile
+    ports:
+      - "2222:22"
     restart: unless-stopped

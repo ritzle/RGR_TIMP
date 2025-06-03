@@ -2,6 +2,7 @@ from flask import request, jsonify
 from . import ServerDetail_bp
 from models import db, User, Server
 from utils import generate_code, send_email
+import paramiko
 
 import logging
 import requests
@@ -29,65 +30,42 @@ def ping_server():
 
 
 @ServerDetail_bp.route("/api/ping-host", methods=["GET"])
-def ping_host():
+def ping_ssh_host():
     """
-    Проверяет доступность хоста по HTTP/HTTPS
+    Проверяет доступность SSH-хоста по адресу и порту 22 (или можно указать свой порт)
     Возвращает:
-    - 200 OK: если хост отвечает (любой HTTP код)
-    - Ошибки: при проблемах с подключением
+    - 200 OK, если подключение успешно
+    - 408, если таймаут
+    - 503, если недоступен
     """
     address = request.args.get("address")
+    port = request.args.get("port", 22, type=int)  # порт можно передавать параметром, по умолчанию 22
+    
     if not address:
         return jsonify({"status": "error", "message": "Адрес не указан"}), 400
 
     try:
-        logging.info(f"Проверка доступности хоста: {address}")
-        
-        # Нормализация адреса (добавляем http:// если нет схемы)
-        if not address.startswith(('http://', 'https://')):
-            address = f'http://{address}'
+        logging.info(f"Проверка доступности SSH хоста: {address}:{port}")
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-        # Делаем HEAD-запрос вместо GET (только проверка соединения)
-        response = requests.head(
-            address,
-            timeout=3,
-            allow_redirects=True,  # Проверяем с учетом редиректов
-            headers={'User-Agent': 'ServerAvailabilityChecker/1.0'}
-        )
-        
-        # Любой ответ считается успехом (даже 404/500)
-        return jsonify({
-            "status": "available",
-            "code": response.status_code,
-            "url": response.url  # Финальный URL после редиректов
-        })
+        # Пытаемся подключиться без пароля, просто чтобы проверить, что сервер доступен
+        ssh.connect(hostname=address, port=port, username='invalid', password='invalid', timeout=3, allow_agent=False, look_for_keys=False)
+        # Если дошли сюда — странно, но значит сервер доступен и аутентификация прошла (маловероятно)
+        ssh.close()
+        return jsonify({"status": "available", "message": "SSH сервер доступен"}), 200
 
-    except requests.exceptions.Timeout:
-        logging.warning(f"Таймаут при проверке {address}")
-        return jsonify({
-            "status": "timeout", 
-            "message": "Сервер не ответил за 3 секунды"
-        }), 408
-        
-    except requests.exceptions.SSLError:
-        logging.warning(f"Ошибка SSL для {address}")
-        return jsonify({
-            "status": "ssl_error",
-            "message": "Проблема с SSL сертификатом"
-        }), 525  # Cloudflare's SSL Handshake Failed
-        
-    except requests.exceptions.ConnectionError as e:
-        logging.warning(f"Ошибка подключения к {address}: {str(e)}")
-        return jsonify({
-            "status": "unreachable",
-            "message": "Не удалось установить соединение",
-            "details": str(e)
-        }), 503
-        
+    except paramiko.AuthenticationException:
+        # Это значит, что сервер доступен, но данные для авторизации неправильные — значит сервер доступен
+        return jsonify({"status": "available", "message": "SSH сервер доступен, но аутентификация не пройдена"}), 200
+
+    except paramiko.SSHException as e:
+        logging.warning(f"SSH ошибка при проверке {address}: {str(e)}")
+        return jsonify({"status": "ssh_error", "message": "Ошибка SSH соединения"}), 503
+
     except Exception as e:
-        logging.error(f"Неожиданная ошибка при проверке {address}: {str(e)}")
-        return jsonify({
-            "status": "error",
-            "message": "Внутренняя ошибка при проверке",
-            "details": str(e)
-        }), 500
+        logging.warning(f"Ошибка подключения к SSH {address}: {str(e)}")
+        # Возможен таймаут или недоступность
+        if "timed out" in str(e).lower():
+            return jsonify({"status": "timeout", "message": "Таймаут при подключении"}), 408
+        return jsonify({"status": "unreachable", "message": "Не удалось подключиться"}), 503

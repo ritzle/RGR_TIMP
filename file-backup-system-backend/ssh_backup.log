@@ -1,0 +1,220 @@
+[2025-06-02 21:34:08,573] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:34:08,574] INFO - Подключение к SSH 172.19.0.2 как test
+[2025-06-02 21:34:18,577] ERROR - Ошибка при подключении к 172.19.0.2
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 43, in ssh_login_and_backup
+    ssh.connect(hostname=address, username=username, password=password, timeout=10)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 386, in connect
+    sock.connect(addr)
+TimeoutError: timed out
+[2025-06-02 21:36:50,314] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:36:50,315] INFO - Подключение к SSH 127.0.0.1 как test
+[2025-06-02 21:36:52,635] WARNING - Ошибка аутентификации: 127.0.0.1 / test
+[2025-06-02 21:37:46,839] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:37:46,840] INFO - Подключение к SSH 127.0.0.1 как test
+[2025-06-02 21:37:46,916] ERROR - Ошибка при подключении к 127.0.0.1
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 44, in ssh_login_and_backup
+    ssh.connect(hostname=address, port=port, username=..., password=...)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 485, in connect
+    self._auth(
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 754, in _auth
+    self._transport.auth_publickey(username, key)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/transport.py", line 1709, in auth_publickey
+    return self.auth_handler.wait_for_response(my_event)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/auth_handler.py", line 248, in wait_for_response
+    raise e
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/transport.py", line 2262, in run
+    handler(m)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/auth_handler.py", line 385, in _parse_service_accept
+    m.add_string(self.username)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/message.py", line 280, in add_string
+    self.add_int(len(s))
+                 ^^^^^^
+TypeError: object of type 'ellipsis' has no len()
+[2025-06-02 21:37:47,770] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:37:47,770] INFO - Подключение к SSH 127.0.0.1 как test
+[2025-06-02 21:37:47,848] ERROR - Ошибка при подключении к 127.0.0.1
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 44, in ssh_login_and_backup
+    ssh.connect(hostname=address, port=port, username=..., password=...)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 485, in connect
+    self._auth(
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 754, in _auth
+    self._transport.auth_publickey(username, key)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/transport.py", line 1709, in auth_publickey
+    return self.auth_handler.wait_for_response(my_event)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/auth_handler.py", line 248, in wait_for_response
+    raise e
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/transport.py", line 2262, in run
+    handler(m)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/auth_handler.py", line 385, in _parse_service_accept
+    m.add_string(self.username)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/message.py", line 280, in add_string
+    self.add_int(len(s))
+                 ^^^^^^
+TypeError: object of type 'ellipsis' has no len()
+[2025-06-02 21:37:48,508] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:37:48,509] INFO - Подключение к SSH 127.0.0.1 как test
+[2025-06-02 21:37:48,581] ERROR - Ошибка при подключении к 127.0.0.1
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 44, in ssh_login_and_backup
+    ssh.connect(hostname=address, port=port, username=..., password=...)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 485, in connect
+    self._auth(
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 754, in _auth
+    self._transport.auth_publickey(username, key)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/transport.py", line 1709, in auth_publickey
+    return self.auth_handler.wait_for_response(my_event)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/auth_handler.py", line 248, in wait_for_response
+    raise e
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/transport.py", line 2262, in run
+    handler(m)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/auth_handler.py", line 385, in _parse_service_accept
+    m.add_string(self.username)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/message.py", line 280, in add_string
+    self.add_int(len(s))
+                 ^^^^^^
+TypeError: object of type 'ellipsis' has no len()
+[2025-06-02 21:38:09,606] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:38:09,607] INFO - Подключение к SSH 127.0.0.1 как test
+[2025-06-02 21:38:09,679] ERROR - Ошибка при подключении к 127.0.0.1
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 44, in ssh_login_and_backup
+    ssh.connect(hostname=address, port=port, username=..., password=...)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 485, in connect
+    self._auth(
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 754, in _auth
+    self._transport.auth_publickey(username, key)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/transport.py", line 1709, in auth_publickey
+    return self.auth_handler.wait_for_response(my_event)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/auth_handler.py", line 248, in wait_for_response
+    raise e
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/transport.py", line 2262, in run
+    handler(m)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/auth_handler.py", line 385, in _parse_service_accept
+    m.add_string(self.username)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/message.py", line 280, in add_string
+    self.add_int(len(s))
+                 ^^^^^^
+TypeError: object of type 'ellipsis' has no len()
+[2025-06-02 21:39:33,301] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:39:33,302] INFO - Подключение к SSH 127.0.0.1 как test
+[2025-06-02 21:39:33,675] INFO - Выполнение команды архивации: tar -czf /tmp/backup.tar.gz /home/test/data
+[2025-06-02 21:39:33,760] INFO - Архив успешно создан на 127.0.0.1, скачивание...
+[2025-06-02 21:39:33,834] INFO - Бэкап успешно скачан: backups/backup_127_0_0_1_20250602_213933.tar.gz
+[2025-06-02 21:51:22,102] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:51:22,103] INFO - Подключение к SSH 127.0.0.1 как test
+[2025-06-02 21:51:22,489] INFO - Выполнение команды архивации: tar -czf /tmp/backup.tar.gz /home/test/data
+[2025-06-02 21:51:22,554] INFO - Архив успешно создан на 127.0.0.1, скачивание...
+[2025-06-02 21:51:22,627] INFO - Бэкап успешно скачан: backups/backup_127_0_0_1_20250602_215122.tar.gz
+[2025-06-02 21:54:13,190] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 21:54:13,190] INFO - Подключение к SSH 127.0.0.1 как test
+[2025-06-02 21:54:13,547] INFO - Выполнение команды архивации: tar -czf /tmp/backup.tar.gz /home/test/data
+[2025-06-02 21:54:13,617] INFO - Архив успешно создан на 127.0.0.1, скачивание...
+[2025-06-02 21:54:13,690] INFO - Бэкап успешно скачан: backups/backup_127_0_0_1_20250602_215413.tar.gz
+[2025-06-02 22:03:08,272] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:03:08,272] INFO - Подключение к SSH ssh-server:22 как test
+[2025-06-02 22:03:08,284] ERROR - Ошибка при подключении к ssh-server
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 44, in ssh_login_and_backup
+    ssh.connect(hostname=address, port=int(port), username=username, password=password, timeout=10)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 377, in connect
+    to_try = list(self._families_and_addresses(hostname, port))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 202, in _families_and_addresses
+    addrinfos = socket.getaddrinfo(
+                ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+[2025-06-02 22:03:11,499] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:03:11,499] INFO - Подключение к SSH ssh-server:2222 как test
+[2025-06-02 22:03:11,510] ERROR - Ошибка при подключении к ssh-server
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 44, in ssh_login_and_backup
+    ssh.connect(hostname=address, port=int(port), username=username, password=password, timeout=10)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 377, in connect
+    to_try = list(self._families_and_addresses(hostname, port))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 202, in _families_and_addresses
+    addrinfos = socket.getaddrinfo(
+                ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+[2025-06-02 22:03:12,498] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:03:12,498] INFO - Подключение к SSH ssh-server:2222 как test
+[2025-06-02 22:03:12,510] ERROR - Ошибка при подключении к ssh-server
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 44, in ssh_login_and_backup
+    ssh.connect(hostname=address, port=int(port), username=username, password=password, timeout=10)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 377, in connect
+    to_try = list(self._families_and_addresses(hostname, port))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 202, in _families_and_addresses
+    addrinfos = socket.getaddrinfo(
+                ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+[2025-06-02 22:03:13,321] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:03:13,322] INFO - Подключение к SSH ssh-server:2222 как test
+[2025-06-02 22:03:13,336] ERROR - Ошибка при подключении к ssh-server
+Traceback (most recent call last):
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/ServerDetail/sshBackup.py", line 44, in ssh_login_and_backup
+    ssh.connect(hostname=address, port=int(port), username=username, password=password, timeout=10)
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 377, in connect
+    to_try = list(self._families_and_addresses(hostname, port))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vladislav/studies/TIMP/RGR/file-backup-system/file-backup-system-backend/venv/lib/python3.12/site-packages/paramiko/client.py", line 202, in _families_and_addresses
+    addrinfos = socket.getaddrinfo(
+                ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -2] Name or service not known
+[2025-06-02 22:03:24,156] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:03:24,157] INFO - Подключение к SSH 127.0.0.1:22 как test
+[2025-06-02 22:03:28,458] WARNING - Ошибка аутентификации: 127.0.0.1 / test
+[2025-06-02 22:03:35,639] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:03:35,640] INFO - Подключение к SSH 127.0.0.1:2222 как test
+[2025-06-02 22:03:35,997] INFO - Выполнение команды архивации: tar -czf /tmp/backup.tar.gz /home/test/data
+[2025-06-02 22:03:36,063] INFO - Архив успешно создан на 127.0.0.1, скачивание...
+[2025-06-02 22:03:36,137] INFO - Бэкап успешно скачан: backups/backup_127_0_0_1_20250602_220335.tar.gz
+[2025-06-02 22:44:24,962] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:44:24,963] INFO - Подключение к SSH 127.0.0.1:22 как test
+[2025-06-02 22:44:27,422] WARNING - Ошибка аутентификации: 127.0.0.1 / test
+[2025-06-02 22:44:31,300] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:44:31,301] INFO - Подключение к SSH 127.0.0.1:2222 как test
+[2025-06-02 22:44:34,686] WARNING - Ошибка аутентификации: 127.0.0.1 / test
+[2025-06-02 22:44:43,439] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 22:44:43,439] INFO - Подключение к SSH 127.0.0.1:2222 как test
+[2025-06-02 22:44:43,991] INFO - Выполнение команды архивации: tar -czf /tmp/backup.tar.gz /home/test
+[2025-06-02 22:44:44,076] INFO - Архив успешно создан на 127.0.0.1, скачивание...
+[2025-06-02 22:44:44,157] INFO - Бэкап успешно скачан: backups/backup_127_0_0_1_20250602_224443.tar.gz
+[2025-06-02 23:27:01,912] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 23:27:01,913] INFO - Подключение к SSH 127.0.0.1:2222 как test
+[2025-06-02 23:27:02,505] INFO - Выполнение команды архивации: tar -czf /tmp/backup.tar.gz /home/test
+[2025-06-02 23:27:02,586] INFO - Архив успешно создан на 127.0.0.1, скачивание...
+[2025-06-02 23:27:02,666] INFO - Бэкап успешно скачан: backups/backup_127_0_0_1_20250602_232701.tar.gz
+[2025-06-02 23:27:02,674] INFO - Удалён локальный файл бэкапа: backups/backup_127_0_0_1_20250602_232701.tar.gz
+[2025-06-02 23:27:21,161] INFO - Получен запрос SSH-бэкапа
+[2025-06-02 23:27:21,162] INFO - Подключение к SSH 127.0.0.1:2222 как test
+[2025-06-02 23:27:21,731] INFO - Выполнение команды архивации: tar -czf /tmp/backup.tar.gz /home/test
+[2025-06-02 23:27:21,817] INFO - Архив успешно создан на 127.0.0.1, скачивание...
+[2025-06-02 23:27:21,899] INFO - Бэкап успешно скачан: backups/backup_127_0_0_1_20250602_232721.tar.gz
+[2025-06-02 23:27:21,900] INFO - Удалён локальный файл бэкапа: backups/backup_127_0_0_1_20250602_232721.tar.gz
+[2025-06-03 00:25:26,378] INFO - Получен запрос SSH-бэкапа
+[2025-06-03 00:25:26,379] INFO - Подключение к SSH 127.0.0.1:2222 как test
+[2025-06-03 00:25:26,736] INFO - Выполнение команды архивации: tar -czf /tmp/backup.tar.gz /home/test
+[2025-06-03 00:25:26,830] INFO - Архив успешно создан на 127.0.0.1, скачивание...
+[2025-06-03 00:25:26,898] INFO - Бэкап успешно скачан: backups/backup_127_0_0_1_20250603_002526.tar.gz
+[2025-06-03 00:25:26,904] INFO - Удалён локальный файл бэкапа: backups/backup_127_0_0_1_20250603_002526.tar.gz

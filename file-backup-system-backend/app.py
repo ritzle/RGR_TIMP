@@ -5,6 +5,7 @@ from HomePage import HomePage_bp
 from ServerDetail import ServerDetail_bp
 from config import Config
 from models import db
+from flask_cors import CORS
 
 import logging
 from colorlog import ColoredFormatter

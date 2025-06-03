@@ -39,6 +39,31 @@
   line-height: 1.5;
 }
 
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deleteBtn {
+  background-color: transparent;
+  border: none;
+  color: #ff4d4d; /* тёмно-красный цвет */
+  font-size: 24px; /* побольше */
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.deleteBtn:hover {
+  background-color: #ff4d4d; /* светло-красный фон при наведении */
+  color: white; /* цвет крестика станет белым для контраста */
+}
+
+
+
 @media (max-width: 768px) {
   .serverCard {
     max-width: 100%;

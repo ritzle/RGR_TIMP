@@ -44,28 +44,34 @@ const ServerDetail = () => {
       }
     };
 
-    const checkStatus = async (address) => {
+    const checkStatus = async (address, port = 22) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/ping-host?address=${encodeURIComponent(address)}`);
+        const res = await fetch(`http://localhost:5000/api/ping-host?address=${encodeURIComponent(address)}&port=${port}`);
         const data = await res.json();
-
+    
         switch (data.status) {
-          case "OK":
+          case "available":
             setStatus("🟢 Активен");
             break;
           case "timeout":
             setStatus("⏱️ Время ожидания истекло");
             break;
-          default:
+          case "ssh_error":
+            setStatus("⚠️ SSH ошибка");
+            break;
+          case "unreachable":
             setStatus("🔴 Недоступен");
+            break;
+          default:
+            setStatus("🔴 Неизвестный статус");
         }
-
+    
         checkFlaskStatus(address);
       } catch {
         setStatus("🔴 Ошибка подключения");
       }
     };
-
+    
     const checkFlaskStatus = async (address) => {
       try {
         const res = await fetch(`http://localhost:5000/api/ping-server?address=${encodeURIComponent(address)}`);
@@ -82,25 +88,43 @@ const ServerDetail = () => {
     fetchServerData();
   }, [name]);
 
-  const handleSSHConnect = async (username, password) => {
+  const handleSSHConnect = async (username, password, port) => {
     setSSHLoading(true);
     setSSHError(null);
     try {
       const response = await fetch("http://localhost:5000/api/ssh-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address, username, password })
+        body: JSON.stringify({ address, username, password, port }) // добавляем порт
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Ошибка SSH-подключения");
-      // Можно здесь обновить список бэкапов или другое при успехе
+  
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || "Ошибка SSH-подключения");
+      }
+  
+      const blob = await response.blob();
+  
+      const downloadUrl = window.URL.createObjectURL(blob);
+  
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = `backup_${address.replace(/\./g, "_")}_${Date.now()}.tar.gz`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+  
+      window.URL.revokeObjectURL(downloadUrl);
+  
     } catch (error) {
       setSSHError(error.message);
-      throw error; // чтобы компонент SSHRequestForm отобразил ошибку
+      throw error;
     } finally {
       setSSHLoading(false);
     }
   };
+  
+  
 
   return (
     <div className={styles.container}>
@@ -115,21 +139,25 @@ const ServerDetail = () => {
       </div>
   
       <div className={styles.mainArea}>
-        <div className={styles.contentColumn}>
-          <ServerContent serverAddress={address} />
-        </div>
-        
-        <div className={styles.sshColumn}>
-          <div className={styles.sshFormWrapper}>
-            <SSHRequestForm
-              serverAddress={address}
-              onConnect={handleSSHConnect}
-              loading={sshLoading}
-              error={sshError}
-            />
-          </div>
-        </div>
+  <div className={styles.contentColumn}>
+    {flaskStatus === "🟢 Работает" && (
+      <ServerContent serverAddress={address} />
+    )}
+  </div>
+
+  <div className={styles.sshColumn}>
+    {flaskStatus !== "🟢 Работает" && (
+      <div className={styles.sshFormWrapper}>
+        <SSHRequestForm
+          serverAddress={address}
+          onConnect={handleSSHConnect}
+          loading={sshLoading}
+          error={sshError}
+        />
       </div>
+    )}
+  </div>
+</div>
     </div>
   );
 };
