@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ChangePasswordModal.module.css";
+import config from "../../config";
 
 const ChangePasswordModal = ({
   email,
@@ -24,7 +25,7 @@ const ChangePasswordModal = ({
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/verify-reset-code", {
+      const response = await fetch(`${config.API_BASE_URL}/api/verify-reset-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code: emailCode }),
@@ -66,7 +67,7 @@ const ChangePasswordModal = ({
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/change-password", {
+      const response = await fetch(`${config.API_BASE_URL}/api/change-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, newPassword }),

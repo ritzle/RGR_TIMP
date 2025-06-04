@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./ServerInfo.module.css";
+import Lottie from "lottie-react";
+import animationData from "./animations/Animation_cube.json";
 
 const ServerInfo = ({ name, address, status, flaskStatus, onBack }) => {
   const getAnimationDelay = (index) => ({
@@ -18,7 +20,8 @@ const ServerInfo = ({ name, address, status, flaskStatus, onBack }) => {
         ← Назад
       </button>
       <h2>Информация о сервере</h2>
-      
+
+
       <div className={styles.infoContainer}>
         <div className={styles.infoItem} style={getAnimationDelay(0)}>
           <span className={styles.infoLabel}>Название:</span>
@@ -26,14 +29,14 @@ const ServerInfo = ({ name, address, status, flaskStatus, onBack }) => {
             {decodeURIComponent(name)}
           </span>
         </div>
-        
+
         <div className={styles.infoItem} style={getAnimationDelay(1)}>
           <span className={styles.infoLabel}>Адрес:</span>
           <span className={styles.infoValue}>
             {address || "Не указан"}
           </span>
         </div>
-        
+
         <div className={styles.infoItem} style={getAnimationDelay(2)}>
           <span className={styles.infoLabel}>ssh-сервер:</span>
           <span className={`${styles.infoValue} ${getStatusClass(status)}`}>
@@ -49,6 +52,11 @@ const ServerInfo = ({ name, address, status, flaskStatus, onBack }) => {
             <span className={styles.statusIndicator}></span>
           </span>
         </div>
+
+
+        <div className={styles.animationWrapper}>
+        <Lottie animationData={animationData} loop />
+      </div>
       </div>
     </aside>
   );

@@ -3,6 +3,9 @@ import Login from "./Login";
 import Register from "./Register";
 import styles from "./AuthPage.module.css";
 
+import Lottie from "lottie-react";
+import animationData from "./animations/Animation_backup_.json";
+
 const AuthPage = () => {
   localStorage.setItem("isAuthenticated", "false");
   const [isLogin, setIsLogin] = useState(true);
@@ -20,7 +23,10 @@ const AuthPage = () => {
       <div className={styles.authContainer}>
         <div className={styles.authWrapper}>
           <div className={styles.splitLeft}>
-            <div className={styles.rocket}>🚀</div>
+            {/* Заменяем ракету на Lottie-анимацию */}
+            <div className={styles.lottieContainer}>
+              <Lottie animationData={animationData} loop={true} />
+            </div>
             <h2 className={styles.description}>Система резервного копирования для серверов</h2>
           </div>
 

@@ -7,10 +7,8 @@ import ScheduleList from "./ScheduleList";
 import BackupCommentModal from "./BackupCommentModal";
 import BackupFileTreeModal from "./BackupFileTreeModal";
 import DeleteConfirmModal from  "./DeleteConfirmModal";
+import config from "../../config";
 
-
-//TODO для режима восстановления добавить окно при ошибки/
-// сделать окно для удаления
 
 const ServerContent = ({ serverAddress }) => {
   const [backups, setBackups] = useState({});
@@ -47,7 +45,7 @@ const ServerContent = ({ serverAddress }) => {
     setLoadingBackups(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/api/get-backups?address=${serverAddress}`,
+        `${config.API_BASE_URL}/api/get-backups?address=${serverAddress}`,
         { signal: AbortSignal.timeout(5000) }
       );
       if (!response.ok) throw new Error(response.statusText);
@@ -68,7 +66,7 @@ const ServerContent = ({ serverAddress }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/list-schedules?address=${serverAddress}`,
+        `${config.API_BASE_URL}/api/list-schedules?address=${serverAddress}`,
         { signal: AbortSignal.timeout(5000) }
       );
       if (!response.ok) throw new Error(response.statusText);
@@ -101,7 +99,7 @@ const ServerContent = ({ serverAddress }) => {
     setLoadingBackup(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/api/create-backup?address=${serverAddress}`,
+        `${config.API_BASE_URL}/api/create-backup?address=${serverAddress}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -125,7 +123,7 @@ const ServerContent = ({ serverAddress }) => {
   const handleDownloadBackup = async (backupName) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/download-backup?address=${encodeURIComponent(serverAddress)}&backup=${encodeURIComponent(backupName)}`
+        `${config.API_BASE_URL}/api/download-backup?address=${encodeURIComponent(serverAddress)}&backup=${encodeURIComponent(backupName)}`
       );
       
       if (!response.ok) {
@@ -158,7 +156,7 @@ const ServerContent = ({ serverAddress }) => {
   
     try {
       const response = await fetch(
-        `http://localhost:5000/api/remove-backup?` +
+        `${config.API_BASE_URL}/api/remove-backup?` +
         `backupName=${encodeURIComponent(backupToDelete)}&` +
         `address=${encodeURIComponent(serverAddress)}`,
         { method: "DELETE" }
@@ -195,7 +193,7 @@ const ServerContent = ({ serverAddress }) => {
     if (!serverAddress || !selectedBackup) return;
     try {
       const response = await fetch(
-        `http://localhost:5000/api/restore-backup`,
+        `${config.API_BASE_URL}/api/restore-backup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -219,7 +217,7 @@ const ServerContent = ({ serverAddress }) => {
   const createSchedule = async (type, timeValue, comment) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/schedule-backup?address=${serverAddress}`,
+        `${config.API_BASE_URL}/api/schedule-backup?address=${serverAddress}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -239,7 +237,7 @@ const ServerContent = ({ serverAddress }) => {
   const handleCancelSchedule = async (scheduleId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/cancel-schedule?address=${encodeURIComponent(serverAddress)}&job_id=${encodeURIComponent(scheduleId)}`,
+        `${config.API_BASE_URL}/api/cancel-schedule?address=${encodeURIComponent(serverAddress)}&job_id=${encodeURIComponent(scheduleId)}`,
         { method: "DELETE" }
       );
       if (!response.ok) {

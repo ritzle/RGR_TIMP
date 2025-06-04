@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "daily_1700_1748945258.129889",
+    "trigger_type": "cron",
+    "comment": "Scheduled daily backup",
+    "created_at": "2025-06-03T10:07:38.140405",
+    "hour": 17,
+    "minute": 0,
+    "display_text": "Ежедневно в 17:00"
+  }
+]

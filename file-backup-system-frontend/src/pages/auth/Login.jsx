@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 
+import config from "../../config";
+
 function Login({ initialEmail = "", initialPassword = "" }) {
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState(initialPassword);
@@ -32,15 +34,7 @@ function Login({ initialEmail = "", initialPassword = "" }) {
       newErrors.email = "Неверный формат email";
     }
 
-    // if (!password.trim()) {
-    //   newErrors.password = "Введите пароль";
-    // } else if (password.length < 8) {
-    //   newErrors.password = "Пароль должен содержать минимум 8 символов";
-    // } else if (!/[A-Z]/.test(password)) {
-    //   newErrors.password = "Должна быть хотя бы одна заглавная буква";
-    // } else if (!/[0-9]/.test(password)) {
-    //   newErrors.password = "Должна быть хотя бы одна цифра";
-    // }
+
 
     setErrors(newErrors);
     setServerError("");
@@ -53,7 +47,8 @@ function Login({ initialEmail = "", initialPassword = "" }) {
       const sanitizedEmail = sanitizeInput(email);
       const sanitizedPassword = sanitizeInput(password);
 
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch(`${config.API_BASE_URL}/api/login`, {
+
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,17 +70,9 @@ function Login({ initialEmail = "", initialPassword = "" }) {
         }));
         navigate("/home");
       } else {
-        const message = data.message?.toLowerCase();
-
-        if (message.includes("почта") || message.includes("пользователь")) {
-          setServerError("Пользователь не найден");
-          setErrors({});
-        } else if (message.includes("пароль")) {
-          setServerError("Неверный пароль");
-          setErrors({ password: true });
-        } else {
-          setServerError("Ошибка входа");
-        }
+        // Всегда одинаковое сообщение при ошибке авторизации
+        setServerError("Логин или пароль неправильный");
+        setErrors({});
       }
     } catch (error) {
       console.error("Ошибка запроса:", error);

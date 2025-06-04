@@ -5,6 +5,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import ServerList from "./ServerList";
 import DeleteConfirmModal from "./DeleteConfirmModal";
+import config from "../../config";
 
 const HomePage = () => {
   const [servers, setServers] = useState([]);
@@ -18,7 +19,7 @@ const HomePage = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user?.email) {
-      fetch(`http://localhost:5000/api/get-user-servers?email=${user.email}`)
+      fetch(`${config.API_BASE_URL}/api/get-user-servers?email=${user.email}`)
         .then((res) => res.json())
         .then((data) => {
           if (Array.isArray(data)) setServers(data);
@@ -52,7 +53,7 @@ const HomePage = () => {
         return;
       }
   
-      const response = await fetch("http://localhost:5000/api/add-server", {
+      const response = await fetch(`${config.API_BASE_URL}/api/add-server`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -113,7 +114,7 @@ const HomePage = () => {
         return;
       }
   
-      const response = await fetch("http://localhost:5000/api/delete-server", {
+      const response = await fetch(`${config.API_BASE_URL}/api/delete-server`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

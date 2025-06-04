@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import styles from "./Modal.module.css";
+import config from "../../config";
+
+
 
 const Modal = ({ onClose, onVerify, code, setCode }) => {
   const [status, setStatus] = useState("idle");

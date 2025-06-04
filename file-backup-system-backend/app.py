@@ -6,7 +6,6 @@ from ServerDetail import ServerDetail_bp
 from config import Config
 from models import db
 from flask_cors import CORS
-
 import logging
 from colorlog import ColoredFormatter
 
@@ -47,4 +46,4 @@ app.register_blueprint(HomePage_bp)
 app.register_blueprint(ServerDetail_bp)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5005)

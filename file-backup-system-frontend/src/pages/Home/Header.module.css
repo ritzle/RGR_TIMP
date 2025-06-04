@@ -191,24 +191,12 @@
   color: #2dd3b7;
 }
 
-/* Стили кнопок */
-.buttonGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-}
 
-.editButton, 
-.saveButton, 
-.logoutButton {
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-}
+
+
+
+
+
 
 .editButton {
   background: linear-gradient(135deg, #4ecdc4, #38b9b0);
@@ -225,21 +213,8 @@
   color: white;
 }
 
-.changePasswordButton {
-  background-color: #1fa5e8;
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  margin-left: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-}
 
-.changePasswordButton:hover {
-  background-color: #1590cc;
-}
+
 
 .changePasswordModal {
   position: fixed;
@@ -272,20 +247,55 @@
   border: 1px solid #ccc;
 }
 
-.changePasswordModal .buttonGroup {
+.buttonGroup {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
   gap: 10px;
+  margin-top: 20px;
 }
 
+.editButton, 
+.saveButton,
+.changePasswordButton,
+.logoutButton {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  color: white;
+}
 
+/* Индивидуальные цвета */
+.editButton {
+  background: linear-gradient(135deg, #4ecdc4, #38b9b0);
+}
+
+.saveButton {
+  background: linear-gradient(135deg, #31d091, #28b47c);
+}
+
+.logoutButton {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.changePasswordButton {
+  background: linear-gradient(135deg, #1fa5e8, #1590cc);
+}
+
+/* Hover эффект для всех */
 .editButton:hover, 
-.saveButton:hover, 
+.saveButton:hover,
+.changePasswordButton:hover,
 .logoutButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   opacity: 0.9;
 }
+
+
+
 
 /* Анимации */
 @keyframes slideIn {

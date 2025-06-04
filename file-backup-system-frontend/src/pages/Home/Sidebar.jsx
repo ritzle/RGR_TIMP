@@ -2,6 +2,9 @@ import React from "react";
 import styles from "./Sidebar.module.css";
 import ServerForm from "./ServerForm";
 
+import Lottie from "lottie-react";
+import animationData from "./animations/Animation_server.json";
+
 const Sidebar = ({ name, address, setName, setIp, handleAddServer, ipError }) => {
   return (
     <aside className={styles.sidebar}>
@@ -14,7 +17,13 @@ const Sidebar = ({ name, address, setName, setIp, handleAddServer, ipError }) =>
         ipError={ipError}
       />
       <div className={styles.emptyPanel}>
-        <h2 className={styles.description}>Тут могла быть ваша реклама</h2>
+        {/* Вместо текста рендерим Lottie-анимацию */}
+        <Lottie 
+          animationData={animationData} 
+          loop={true} 
+          autoplay={true} 
+          style={{ width: 300, height: 300 }} // размер можно менять
+        />
         <div className={styles.underline} />
       </div>
     </aside>

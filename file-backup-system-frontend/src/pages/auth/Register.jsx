@@ -3,6 +3,9 @@ import Modal from "./Modal.jsx";
 import styles from "./Register.module.css";
 
 
+import config from "../../config";
+
+
 
 import EyeIcon from './icons/eye.png';
 import EyeSlashIcon from './icons/eye-slash.png';
@@ -19,7 +22,7 @@ function Register({ onSuccess }) {
   const [showModal, setShowModal] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // Новое состояние для отображения пароля
+  const [showPassword, setShowPassword] = useState(false);
 
   const sanitizeInput = (input) => {
     return input.replace(/[<>'"\\;]/g, '');
@@ -99,7 +102,7 @@ function Register({ onSuccess }) {
         password: sanitizeInput(formData.password)
       };
 
-      const response = await fetch("http://localhost:5000/api/register-init", {
+      const response = await fetch(`${config.API_BASE_URL}/api/register-init`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(sanitizedData),
@@ -129,7 +132,7 @@ function Register({ onSuccess }) {
 
   const handleVerify = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/verify", {
+      const response = await fetch(`${config.API_BASE_URL}/api/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

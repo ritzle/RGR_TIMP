@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./file-backup-system-backend
+      dockerfile: Dockerfile
+    ports:
+      - "5005:5005"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Пробел после "-" обязателен!
+    env_file:
+      - ./file-backup-system-backend/.env
+    restart: unless-stopped
+    # УДАЛИТЬ depends_on: postgres (этот сервис больше не нужен)
+
+  frontend:
+    build:
+      context: ./file-backup-system-frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:5005
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  storage-server:
+    build:
+      context: ./file-storage-server/storage-server
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./file-storage-server/storage-server/storage:/app/storage
+    restart: unless-stopped
+
+  ssh-server:
+    build:
+      context: ./file-storage-server/ssh-server
+      dockerfile: Dockerfile
+    ports:
+      - "2222:22"
+    restart: unless-stopped

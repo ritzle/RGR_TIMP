@@ -4,6 +4,7 @@ import styles from "./ServerDetailPage.module.css";
 import ServerInfo from "./ServerInfo";
 import ServerContent from "./ServerContent";
 import SSHRequestForm from "./SSHRequestForm";
+import config from "../../config";
 
 
 const ServerDetail = () => {
@@ -26,7 +27,7 @@ const ServerDetail = () => {
 
     const fetchServerData = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/get-user-servers?email=${user.email}`);
+        const res = await fetch(`${config.API_BASE_URL}/api/get-user-servers?email=${user.email}`);
         const allServers = await res.json();
         const target = allServers.find((srv) => srv.name === name);
 
@@ -46,7 +47,7 @@ const ServerDetail = () => {
 
     const checkStatus = async (address, port = 22) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/ping-host?address=${encodeURIComponent(address)}&port=${port}`);
+        const res = await fetch(`${config.API_BASE_URL}/api/ping-host?address=${encodeURIComponent(address)}&port=${port}`);
         const data = await res.json();
     
         switch (data.status) {
@@ -74,7 +75,7 @@ const ServerDetail = () => {
     
     const checkFlaskStatus = async (address) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/ping-server?address=${encodeURIComponent(address)}`);
+        const res = await fetch(`${config.API_BASE_URL}/api/ping-server?address=${encodeURIComponent(address)}`);
         if (res.ok) {
           setFlaskStatus("🟢 Работает");
         } else {
@@ -92,7 +93,7 @@ const ServerDetail = () => {
     setSSHLoading(true);
     setSSHError(null);
     try {
-      const response = await fetch("http://localhost:5000/api/ssh-login", {
+      const response = await fetch(`${config.API_BASE_URL}/api/ssh-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ address, username, password, port }) // добавляем порт

@@ -4,6 +4,8 @@ import styles from "./Header.module.css";
 
 import Profile from './icons/profile.png';
 
+import config from "../../config";
+
 import ChangePasswordModal from "./ChangePasswordModal";
 
 const Header = () => {
@@ -90,7 +92,7 @@ const Header = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/update-profile", {
+      const response = await fetch(`${config.API_BASE_URL}/api/update-profile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +131,7 @@ const Header = () => {
 
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/api/send-reset-code", {
+      const response = await fetch(`${config.API_BASE_URL}/api/send-reset-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: user.email }),
@@ -157,7 +159,7 @@ const Header = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/verify-reset-code", {
+      const response = await fetch(`${config.API_BASE_URL}/api/verify-reset-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -201,7 +203,7 @@ const Header = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/change-password", {
+      const response = await fetch(`${config.API_BASE_URL}/api/change-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

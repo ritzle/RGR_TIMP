@@ -169,3 +169,15 @@
 .offline {
   color: #ff6b6b;
 }
+
+.animationWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.animationWrapper > div {
+  width: 180px;
+  height: 180px;
+}

@@ -2,23 +2,23 @@ from flask import request, jsonify
 from . import auth_bp
 from models import db, User
 from utils import generate_code, send_email
+from logger import logger
 
-import time, bcrypt, threading, time, logging
+import time, bcrypt, threading
 
-logging.basicConfig(level=logging.INFO)
-
-
-
-#временное хранения для подтерждения почты 
+# Временное хранение для подтверждения почты
 pending_users = {}  # ключ — email
 
 
 def cleanup_pending_users():
     while True:
         now = time.time()
-        expired = [email for email, data in pending_users.items() if now - data["created_at"] > 120]
+        expired = [
+            email for email, data in pending_users.items()
+            if now - data["created_at"] > 120
+        ]
         for email in expired:
-            logging.info(f"Удаление просроченной регистрации: {email}")
+            logger.info(f"Удаление просроченной регистрации: {email}")
             pending_users.pop(email)
         time.sleep(60)  # проверка каждую минуту
 
@@ -31,7 +31,6 @@ cleanup_thread.start()
 def register_init():
     data = request.json
     email = data.get("email")
-    logging.info(f"Регистрация: {email}")
 
     if email in pending_users or User.query.filter_by(email=email).first():
         return jsonify({"message": "Email уже используется или ожидает подтверждения"}), 409
@@ -47,51 +46,12 @@ def register_init():
         "created_at": time.time()
     }
 
-    logging.info(f"Код подтверждения для {email}: {code}")
-
     if send_email(email, code):
+        logger.info(f"Регистрация инициирована: {email}")
         return jsonify({"message": "Письмо отправлено"})
     else:
-        pending_users.pop(email, None)  # очищаем
+        pending_users.pop(email, None)
         return jsonify({"message": "Ошибка при отправке письма"}), 500
-
-
-
-
-
-
-
-
-# Вход
-@auth_bp.route("/api/login", methods=["POST"])
-def login():
-    data = request.json
-    email = data.get("email")
-    password = data.get("password")
-    logging.info(f"Попытка входа: {email}")
-
-    user = User.query.filter_by(email=email).first()
-
-    if not user:
-        return jsonify({"message": "Пользователь не найден"}), 404
-
-
-    if not bcrypt.checkpw(password.encode(), user.password.encode()):
-        return jsonify({"message": "Неверный пароль"}), 401
-
-    return jsonify({
-        "message": "Вход выполнен",
-        "user": {
-            "id": user.id,
-            "email": user.email,
-            "firstName": user.first_name,
-            "lastName": user.last_name
-        }
-    })
-
-
-
-
 
 
 # Подтверждение кода
@@ -112,10 +72,6 @@ def verify_code():
     if pending["verification_code"] != code:
         return jsonify({"message": "Неверный код"}), 400
 
-
-    logging.info(f"пользователь с : {email} подтвердил почту")
-
-    # Создание пользователя
     user = User(
         first_name=pending["first_name"],
         last_name=pending["last_name"],
@@ -126,6 +82,34 @@ def verify_code():
     db.session.commit()
 
     pending_users.pop(email)
+    logger.info(f"Пользователь подтвердил почту: {email}")
 
     return jsonify({"message": "Почта подтверждена, пользователь создан"})
 
+
+# Вход
+@auth_bp.route("/api/login", methods=["POST"])
+def login():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({"message": "Пользователь не найден"}), 404
+
+    if not bcrypt.checkpw(password.encode(), user.password.encode()):
+        return jsonify({"message": "Неверный пароль"}), 401
+
+    logger.info(f"Успешный вход: {email}")
+
+    return jsonify({
+        "message": "Вход выполнен",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "firstName": user.first_name,
+            "lastName": user.last_name
+        }
+    })

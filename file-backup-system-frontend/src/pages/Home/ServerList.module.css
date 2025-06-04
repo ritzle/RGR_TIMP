@@ -6,11 +6,8 @@
   min-width: 0;
   padding: 20px;
   transition: all 0.3s ease;
-  overflow: hidden; /* ограничим прокрутку внутри .cards */
-}
-
-.serverList:hover {
-  transform: translateY(-2px);
+  box-sizing: border-box; /* Добавлено */
+  height: 100%; /* Добавлено */
 }
 
 .heading {
@@ -45,15 +42,17 @@
   flex-wrap: wrap;
   gap: 20px;
   overflow-y: auto;
-  max-height: calc(100vh - 160px);
+  max-height: calc(100vh - 200px); /* Изменено */
   animation: fadeIn 0.5s ease-out;
-  padding: 30px 5px 20px 0;
+  padding: 10px 5px 20px 0;
+  box-sizing: border-box; /* Добавлено */
 }
 
 .cards > * {
   scroll-snap-align: start;
+  flex: 1 1 300px; /* Добавлено для контроля размера карточек */
+  min-width: 0; /* Добавлено */
 }
-
 
 .cards::-webkit-scrollbar {
   width: 6px;
@@ -74,17 +73,20 @@
   background-color: #1fa5e8;
 }
 
-
-
-
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
+  .serverList {
+    padding: 15px; /* Изменено */
+  }
+  
   .cards {
     flex-direction: column;
+    max-height: none; /* Изменено */
+    overflow-y: visible; /* Изменено */
   }
   
   .heading {
@@ -93,5 +95,10 @@
   
   .serverList:hover .heading::after {
     width: 70px;
+  }
+  
+  .cards > * {
+    flex: 1 1 auto; /* Изменено для мобильных */
+    width: 100%;
   }
 }
