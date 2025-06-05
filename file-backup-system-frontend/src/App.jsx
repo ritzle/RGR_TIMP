@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom"; // ← заменили BrowserRouter на HashRouter
 import AuthPage from "./pages/auth/AuthPage";
 import HomePage from "./pages/Home/HomePage";
 import ServerDetailPage from "./pages/ServerDetail/ServerDetailPage";
@@ -10,7 +10,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<AuthPage />} />
-
         <Route
           path="/home"
           element={
@@ -19,12 +18,11 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/server/:name/"
           element={
             <ProtectedRoute>
-              <ServerDetailPage/>
+              <ServerDetailPage />
             </ProtectedRoute>
           }
         />

@@ -11,6 +11,6 @@ COPY . .
 
 ENV PYTHONUNBUFFERED=1
 
-EXPOSE 5005
+EXPOSE 6005
 
 CMD ["python", "app.py"]

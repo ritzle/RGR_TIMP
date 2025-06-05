@@ -6,7 +6,6 @@ import ServerContent from "./ServerContent";
 import SSHRequestForm from "./SSHRequestForm";
 import config from "../../config";
 
-
 const ServerDetail = () => {
   const { name } = useParams();
   const navigate = useNavigate();
@@ -15,7 +14,6 @@ const ServerDetail = () => {
   const [flaskStatus, setFlaskStatus] = useState("Проверка...");
   const [address, setAddress] = useState("");
 
-  // Добавляем состояние для SSH-запроса
   const [sshLoading, setSSHLoading] = useState(false);
   const [sshError, setSSHError] = useState(null);
 
@@ -23,11 +21,28 @@ const ServerDetail = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (!user?.email) return alert("Пользователь не авторизован");
+    const token = localStorage.getItem("token");
+
+    if (!user?.email || !token) {
+      alert("Пользователь не авторизован");
+      return;
+    }
 
     const fetchServerData = async () => {
       try {
-        const res = await fetch(`${config.API_BASE_URL}/api/get-user-servers?email=${user.email}`);
+        const res = await fetch(
+          `${config.API_BASE_URL}/api/get-user-servers?email=${user.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Ошибка при получении серверов");
+        }
+
         const allServers = await res.json();
         const target = allServers.find((srv) => srv.name === name);
 
@@ -47,9 +62,11 @@ const ServerDetail = () => {
 
     const checkStatus = async (address, port = 22) => {
       try {
-        const res = await fetch(`${config.API_BASE_URL}/api/ping-host?address=${encodeURIComponent(address)}&port=${port}`);
+        const res = await fetch(
+          `${config.API_BASE_URL}/api/ping-host?address=${encodeURIComponent(address)}&port=${port}`
+        );
         const data = await res.json();
-    
+
         switch (data.status) {
           case "available":
             setStatus("🟢 Активен");
@@ -66,16 +83,18 @@ const ServerDetail = () => {
           default:
             setStatus("🔴 Неизвестный статус");
         }
-    
+
         checkFlaskStatus(address);
       } catch {
         setStatus("🔴 Ошибка подключения");
       }
     };
-    
+
     const checkFlaskStatus = async (address) => {
       try {
-        const res = await fetch(`${config.API_BASE_URL}/api/ping-server?address=${encodeURIComponent(address)}`);
+        const res = await fetch(
+          `${config.API_BASE_URL}/api/ping-server?address=${encodeURIComponent(address)}`
+        );
         if (res.ok) {
           setFlaskStatus("🟢 Работает");
         } else {
@@ -90,33 +109,36 @@ const ServerDetail = () => {
   }, [name]);
 
   const handleSSHConnect = async (username, password, port) => {
+    const token = localStorage.getItem("token");
     setSSHLoading(true);
     setSSHError(null);
+
     try {
       const response = await fetch(`${config.API_BASE_URL}/api/ssh-login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address, username, password, port }) // добавляем порт
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ address, username, password, port }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         throw new Error(errorData?.message || "Ошибка SSH-подключения");
       }
-  
+
       const blob = await response.blob();
-  
       const downloadUrl = window.URL.createObjectURL(blob);
-  
+
       const a = document.createElement("a");
       a.href = downloadUrl;
       a.download = `backup_${address.replace(/\./g, "_")}_${Date.now()}.tar.gz`;
       document.body.appendChild(a);
       a.click();
       a.remove();
-  
+
       window.URL.revokeObjectURL(downloadUrl);
-  
     } catch (error) {
       setSSHError(error.message);
       throw error;
@@ -124,41 +146,39 @@ const ServerDetail = () => {
       setSSHLoading(false);
     }
   };
-  
-  
 
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <ServerInfo 
-          name={name} 
-          address={address} 
-          status={status} 
+        <ServerInfo
+          name={name}
+          address={address}
+          status={status}
           flaskStatus={flaskStatus}
-          onBack={handleBack} 
+          onBack={handleBack}
         />
       </div>
-  
-      <div className={styles.mainArea}>
-  <div className={styles.contentColumn}>
-    {flaskStatus === "🟢 Работает" && (
-      <ServerContent serverAddress={address} />
-    )}
-  </div>
 
-  <div className={styles.sshColumn}>
-    {flaskStatus !== "🟢 Работает" && (
-      <div className={styles.sshFormWrapper}>
-        <SSHRequestForm
-          serverAddress={address}
-          onConnect={handleSSHConnect}
-          loading={sshLoading}
-          error={sshError}
-        />
+      <div className={styles.mainArea}>
+        <div className={styles.contentColumn}>
+          {flaskStatus === "🟢 Работает" && (
+            <ServerContent serverAddress={address} />
+          )}
+        </div>
+
+        <div className={styles.sshColumn}>
+          {flaskStatus !== "🟢 Работает" && (
+            <div className={styles.sshFormWrapper}>
+              <SSHRequestForm
+                serverAddress={address}
+                onConnect={handleSSHConnect}
+                loading={sshLoading}
+                error={sshError}
+              />
+            </div>
+          )}
+        </div>
       </div>
-    )}
-  </div>
-</div>
     </div>
   );
 };

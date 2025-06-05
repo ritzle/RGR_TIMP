@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import styles from "./Modal.module.css";
-import config from "../../config";
-
-
 
 const Modal = ({ onClose, onVerify, code, setCode }) => {
   const [status, setStatus] = useState("idle");
@@ -24,39 +21,46 @@ const Modal = ({ onClose, onVerify, code, setCode }) => {
   };
 
   return (
-    <div className={styles.modalOverlay}>
-      <div
-        className={`${styles.modalContent} ${
-          status === "error" ? styles.errorShake : ""
-        }`}
-      >
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
         {status === "success" ? (
-          <p className={styles.successMessage}>
+          <h3 className={styles.modalTitle}>
             Пользователь зарегистрирован ✅
-          </p>
+          </h3>
         ) : (
           <>
-            <h3>Подтвердите E-mail</h3>
-            <p>Мы отправили код на вашу почту. Введите его ниже:</p>
-            <input
-              type="text"
-              placeholder="Введите код"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className={status === "error" ? styles.errorInput : ""}
-            />
-            {status === "error" && (
-              <div className={styles.errorText}>Неверный код</div>
-            )}
-            <div className={styles.modalButtons}>
+            <h3 className={styles.modalTitle}>Подтвердите E-mail</h3>
+
+            <div className={styles.formGroup}>
+              <label>Мы отправили код на вашу почту. Введите его ниже:</label>
+              <input
+                type="text"
+                placeholder="Код подтверждения"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className={`${styles.commentInput} ${
+                  status === "error" ? styles.error : ""
+                }`}
+              />
+              {status === "error" && (
+                <div className={styles.error}>Неверный код</div>
+              )}
+            </div>
+
+            <div className={styles.modalActions}>
+              <button
+                onClick={onClose}
+                className={styles.cancelBtn}
+                disabled={status === "success"}
+              >
+                Отмена
+              </button>
               <button
                 onClick={handleVerifyClick}
                 className={styles.confirmBtn}
+                disabled={status === "success"}
               >
                 Подтвердить
-              </button>
-              <button onClick={onClose} className={styles.closeBtn}>
-                Отмена
               </button>
             </div>
           </>

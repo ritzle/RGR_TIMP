@@ -4,3 +4,4 @@ __pycache__/
 venv/
 *.db
 instance/
+all-services.tar

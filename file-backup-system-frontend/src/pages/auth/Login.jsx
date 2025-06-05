@@ -62,6 +62,8 @@ function Login({ initialEmail = "", initialPassword = "" }) {
       const data = await response.json();
 
       if (response.ok) {
+        
+        localStorage.setItem("token", data.access_token);
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("user", JSON.stringify({
           firstName: data.user.firstName,

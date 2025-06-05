@@ -14,6 +14,7 @@ const Header = () => {
   const [user, setUser] = useState({ firstName: "", lastName: "", email: "" });
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(user);
+  const [token, setToken] = useState("");
   const navigate = useNavigate();
   const panelRef = useRef(null);
 
@@ -25,6 +26,13 @@ const Header = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -84,7 +92,13 @@ const Header = () => {
     setEditedUser((prev) => ({ ...prev, [field]: value }));
   };
 
+
   const handleSave = async () => {
+    if (!token) {
+      alert("Требуется авторизация");
+      return;
+    }
+
     const updatedUser = {
       ...user,
       firstName: editedUser.firstName,
@@ -95,6 +109,7 @@ const Header = () => {
       const response = await fetch(`${config.API_BASE_URL}/api/update-profile`, {
         method: "POST",
         headers: {
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -120,7 +135,13 @@ const Header = () => {
   };
 
   // Здесь функция открытия модального окна смены пароля
+
   const openChangePassword = async () => {
+    if (!token) {
+      alert("Требуется авторизация");
+      return;
+    }
+
     closePanel();
     setIsChangingPassword(true);
     setPasswordStep(1);
@@ -133,7 +154,10 @@ const Header = () => {
       setLoading(true);
       const response = await fetch(`${config.API_BASE_URL}/api/send-reset-code`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({ email: user.email }),
       });
 
@@ -152,6 +176,11 @@ const Header = () => {
   };
 
   const handleConfirmCode = async () => {
+    if (!token) {
+      alert("Требуется авторизация");
+      return;
+    }
+
     if (!emailCode.trim()) {
       alert("Введите код из письма");
       return;
@@ -161,7 +190,10 @@ const Header = () => {
     try {
       const response = await fetch(`${config.API_BASE_URL}/api/verify-reset-code`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           email: user.email,
           code: emailCode,
@@ -205,7 +237,10 @@ const Header = () => {
     try {
       const response = await fetch(`${config.API_BASE_URL}/api/change-password`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           email: user.email,
           newPassword: newPassword,

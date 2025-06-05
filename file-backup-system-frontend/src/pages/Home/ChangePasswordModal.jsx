@@ -14,8 +14,15 @@ const ChangePasswordModal = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [token, setToken] = useState(""); // Добавлено состояние для токена
 
-
+  // Получаем токен из localStorage при монтировании компонента
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
 
   const handleConfirmCode = async () => {
     if (!emailCode.trim()) {
@@ -23,11 +30,19 @@ const ChangePasswordModal = ({
       return;
     }
 
+    if (!token) { // Проверка наличия токена
+      setError("Требуется авторизация");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch(`${config.API_BASE_URL}/api/verify-reset-code`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json" 
+        },
         body: JSON.stringify({ email, code: emailCode }),
       });
 
@@ -65,11 +80,19 @@ const ChangePasswordModal = ({
       return;
     }
 
+    if (!token) { // Проверка наличия токена
+      setError("Требуется авторизация");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch(`${config.API_BASE_URL}/api/change-password`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json" 
+        },
         body: JSON.stringify({ email, newPassword }),
       });
 
@@ -81,7 +104,7 @@ const ChangePasswordModal = ({
       setSuccessMessage("Пароль успешно изменён!");
       setError("");
       setPasswordStep(3);
-      onPasswordChangeSuccess(); // например, скрыть модалку через setShowModal(false)
+      onPasswordChangeSuccess();
     } catch (error) {
       setError(error.message);
     } finally {

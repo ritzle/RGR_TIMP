@@ -14,27 +14,140 @@ const HomePage = () => {
   const [addressError, setAddressError] = useState("");
   const [serverToDelete, setServerToDelete] = useState(null);
   const [deleteError, setDeleteError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Проверка аутентификации при загрузке
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user?.email) {
-      fetch(`${config.API_BASE_URL}/api/get-user-servers?email=${user.email}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (Array.isArray(data)) setServers(data);
-        })
-        .catch((err) => console.error("Ошибка при загрузке серверов:", err));
+    const checkAuth = async () => {
+      const user = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+      
+      if (!user || !token) {
+        navigate("/login");
+        return;
+      }
+
+      // Дополнительная проверка валидности токена
+      try {
+        const response = await fetch(`${config.API_BASE_URL}/api/validate-token`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        if (response.status === 401) {
+          // Попытка обновить токен, если есть refreshToken
+          const refreshToken = localStorage.getItem("refreshToken");
+          if (refreshToken) {
+            const newTokens = await refreshTokens(refreshToken);
+            if (newTokens) {
+              localStorage.setItem("token", newTokens.access_token);
+              localStorage.setItem("refreshToken", newTokens.refresh_token);
+              return;
+            }
+          }
+          
+          // Если не удалось обновить - разлогиниваем
+          localStorage.clear();
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Ошибка проверки токена:", error);
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
+
+  // Функция для обновления токенов
+  const refreshTokens = async (refreshToken) => {
+    try {
+      const response = await fetch(`${config.API_BASE_URL}/api/refresh-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ refresh_token: refreshToken })
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      console.error("Ошибка обновления токена:", error);
     }
+    return null;
+  };
+
+  const fetchServers = async () => {
+    setLoading(true);
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
+      
+      if (!user?.email || !token) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(
+        `${config.API_BASE_URL}/api/get-user-servers?email=${encodeURIComponent(user.email)}`, 
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      if (response.status === 401) {
+        // Попытка обновить токен
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          const newTokens = await refreshTokens(refreshToken);
+          if (newTokens) {
+            localStorage.setItem("token", newTokens.access_token);
+            localStorage.setItem("refreshToken", newTokens.refresh_token);
+            // Повторяем запрос с новым токеном
+            return fetchServers();
+          }
+        }
+        
+        localStorage.clear();
+        navigate("/login");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      const data = await response.json();
+      setServers(data);
+      localStorage.setItem("servers", JSON.stringify(data));
+    } catch (error) {
+      console.error("Ошибка загрузки:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchServers();
   }, []);
 
   const handleAddServer = async () => {
     if (!name || !address) return;
+    const token = localStorage.getItem("token");
+    if (!token) { // Проверка наличия токена
+      alert("Требуется авторизация");
+      return;
+    }
   
     const trimmedName = name.trim().toLowerCase();
     const trimmedAddress = address.trim();
   
-    // Проверка уникальности по имени и IP
     const isDuplicate = servers.some(
       (s) =>
         s.name.trim().toLowerCase() === trimmedName ||
@@ -55,7 +168,10 @@ const HomePage = () => {
   
       const response = await fetch(`${config.API_BASE_URL}/api/add-server`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json" 
+        },
         body: JSON.stringify({
           name,
           ip_address: address,
@@ -83,7 +199,6 @@ const HomePage = () => {
       alert("Сервер недоступен");
     }
   };
-  
 
   const handleCardClick = (server) => {
     navigate(`/server/${encodeURIComponent(server.name)}`, {
@@ -106,6 +221,12 @@ const HomePage = () => {
 
   const confirmDelete = async () => {
     if (!serverToDelete) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) { // Проверка наличия токена
+      setDeleteError("Требуется авторизация");
+      return;
+    }
   
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -116,7 +237,10 @@ const HomePage = () => {
   
       const response = await fetch(`${config.API_BASE_URL}/api/delete-server`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json" 
+        },
         body: JSON.stringify({ 
           name: serverToDelete.name,
           email: user.email
@@ -138,7 +262,6 @@ const HomePage = () => {
       setDeleteError("Не удалось удалить сервер. Попробуйте ещё раз.");
     }
   };
-  
 
   return (
     <div className={styles.dashboard}>

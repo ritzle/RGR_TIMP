@@ -8,3 +8,50 @@ file-storage-server/
 │   └── requirements.txt
 └── ssh-server/
     └── Dockerfile
+
+
+      GNU nano 7.2                                                                                   docker-compose.yml                                                                                             
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./file-backup-system-backend
+      dockerfile: Dockerfile
+    ports:
+      - "6005:6005"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ./file-backup-system-backend/.env
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./file-backup-system-frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://81.19.140.11:6005
+    ports:
+      - "6080:80"
+    depends_on:
+      - backend
+
+
+  storage-server:
+    build:
+      context: ./file-storage-server/storage-server
+      dockerfile: Dockerfile
+    ports:
+      - "6001:5001"
+    volumes:
+      - ./file-storage-server/storage-server/storage:/app/storage
+    restart: unless-stopped
+
+  ssh-server:
+    build:
+      context: ./file-storage-server/ssh-server
+      dockerfile: Dockerfile
+    ports:
+      - "2222:22"
+    restart: unless-stopped

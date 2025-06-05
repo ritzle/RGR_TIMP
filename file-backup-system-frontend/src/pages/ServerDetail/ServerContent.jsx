@@ -6,9 +6,8 @@ import ScheduleModal from "./ScheduleModal";
 import ScheduleList from "./ScheduleList";
 import BackupCommentModal from "./BackupCommentModal";
 import BackupFileTreeModal from "./BackupFileTreeModal";
-import DeleteConfirmModal from  "./DeleteConfirmModal";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 import config from "../../config";
-
 
 const ServerContent = ({ serverAddress }) => {
   const [backups, setBackups] = useState({});
@@ -19,25 +18,25 @@ const ServerContent = ({ serverAddress }) => {
   const [loadingRestore, setLoadingRestore] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
-
   const [backupToDelete, setBackupToDelete] = useState(null);
-
-
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [comment, setComment] = useState("");
   const [backupCompleted, setBackupCompleted] = useState(false);
   const [createdBackupName, setCreatedBackupName] = useState('');
-
   const [schedules, setSchedules] = useState([]);
   const [loadingSchedules, setLoadingSchedules] = useState(false);
   const [scheduleError, setScheduleError] = useState(null);
-
   const [deletingBackup, setDeletingBackup] = useState(false);
   const [loadingBackups, setLoadingBackups] = useState(false);
-
   const [selectedBackupFiles, setSelectedBackupFiles] = useState([]);
   const [showFileTreeModal, setShowFileTreeModal] = useState(false);
+
+  const token = localStorage.getItem("token");
+  const authHeaders = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
 
   const loadBackups = useCallback(async () => {
     if (!serverAddress) return;
@@ -46,7 +45,11 @@ const ServerContent = ({ serverAddress }) => {
     try {
       const response = await fetch(
         `${config.API_BASE_URL}/api/get-backups?address=${serverAddress}`,
-        { signal: AbortSignal.timeout(5000) }
+        {
+          method: "GET",
+          headers: authHeaders,
+          signal: AbortSignal.timeout(5000)
+        }
       );
       if (!response.ok) throw new Error(response.statusText);
       const data = await response.json();
@@ -67,7 +70,11 @@ const ServerContent = ({ serverAddress }) => {
     try {
       const response = await fetch(
         `${config.API_BASE_URL}/api/list-schedules?address=${serverAddress}`,
-        { signal: AbortSignal.timeout(5000) }
+        {
+          method: "GET",
+          headers: authHeaders,
+          signal: AbortSignal.timeout(5000)
+        }
       );
       if (!response.ok) throw new Error(response.statusText);
       const data = await response.json();
@@ -85,13 +92,11 @@ const ServerContent = ({ serverAddress }) => {
     loadSchedules();
   }, [loadBackups, loadSchedules]);
 
-
   useEffect(() => {
     const interval = setInterval(() => {
       loadBackups();
       loadSchedules();
     }, 10000);
-    
     return () => clearInterval(interval);
   }, [loadBackups, loadSchedules]);
 
@@ -102,7 +107,7 @@ const ServerContent = ({ serverAddress }) => {
         `${config.API_BASE_URL}/api/create-backup?address=${serverAddress}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: authHeaders,
           body: JSON.stringify({ comment })
         }
       );
@@ -119,24 +124,26 @@ const ServerContent = ({ serverAddress }) => {
     }
   };
 
-
   const handleDownloadBackup = async (backupName) => {
     try {
       const response = await fetch(
-        `${config.API_BASE_URL}/api/download-backup?address=${encodeURIComponent(serverAddress)}&backup=${encodeURIComponent(backupName)}`
+        `${config.API_BASE_URL}/api/download-backup?address=${encodeURIComponent(serverAddress)}&backup=${encodeURIComponent(backupName)}`,
+        {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}` }
+        }
       );
-      
+
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || "Ошибка при скачивании бэкапа");
       }
-  
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-  
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${backupName}.zip`; // Или любое другое расширение
+      link.download = `${backupName}.zip`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -146,48 +153,42 @@ const ServerContent = ({ serverAddress }) => {
       alert("Не удалось скачать бэкап: " + error.message);
     }
   };
-  
 
   const confirmDeleteBackup = async () => {
     if (!backupToDelete) return;
-  
+
     setDeleteError(null);
     setDeletingBackup(true);
-  
+
     try {
       const response = await fetch(
-        `${config.API_BASE_URL}/api/remove-backup?` +
-        `backupName=${encodeURIComponent(backupToDelete)}&` +
-        `address=${encodeURIComponent(serverAddress)}`,
-        { method: "DELETE" }
+        `${config.API_BASE_URL}/api/remove-backup?backupName=${encodeURIComponent(backupToDelete)}&address=${encodeURIComponent(serverAddress)}`,
+        {
+          method: "DELETE",
+          headers: authHeaders
+        }
       );
-  
+
       if (!response.ok) {
         const data = await response.json();
-        const err = new Error(data.message || "Ошибка удаления");
-        err.backup_name = data.backup_name;
-        throw err;
+        throw new Error(data.message || "Ошибка удаления");
       }
-  
+
       await loadBackups();
       setShowDeleteModal(false);
       setBackupToDelete(null);
     } catch (error) {
       setDeleteError(error);
     } finally {
-      setDeletingBackup(false);  // сбрасываем состояние в любом случае
+      setDeletingBackup(false);
     }
   };
-  
-  
-  
+
   const handleDeleteRequest = (backupName) => {
     setBackupToDelete(backupName);
     setShowDeleteModal(true);
-    setDeleteError(null); 
+    setDeleteError(null);
   };
-  
-  
 
   const handleConfirmRestore = async () => {
     if (!serverAddress || !selectedBackup) return;
@@ -196,10 +197,10 @@ const ServerContent = ({ serverAddress }) => {
         `${config.API_BASE_URL}/api/restore-backup`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            address: serverAddress, 
-            backup: selectedBackup 
+          headers: authHeaders,
+          body: JSON.stringify({
+            address: serverAddress,
+            backup: selectedBackup
           })
         }
       );
@@ -220,7 +221,7 @@ const ServerContent = ({ serverAddress }) => {
         `${config.API_BASE_URL}/api/schedule-backup?address=${serverAddress}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: authHeaders,
           body: JSON.stringify({ type, time: timeValue, comment })
         }
       );
@@ -238,7 +239,10 @@ const ServerContent = ({ serverAddress }) => {
     try {
       const response = await fetch(
         `${config.API_BASE_URL}/api/cancel-schedule?address=${encodeURIComponent(serverAddress)}&job_id=${encodeURIComponent(scheduleId)}`,
-        { method: "DELETE" }
+        {
+          method: "DELETE",
+          headers: authHeaders
+        }
       );
       if (!response.ok) {
         const data = await response.json();
@@ -261,7 +265,7 @@ const ServerContent = ({ serverAddress }) => {
       setShowFileTreeModal(true);
     }
   };
-  
+
   const handleBackupClick = () => {
     setBackupCompleted(false);
     setShowCommentModal(true);
@@ -272,7 +276,6 @@ const ServerContent = ({ serverAddress }) => {
     setComment("");
     setBackupCompleted(false);
   };
-
 
   return (
     <div className={styles.wrapper}>
@@ -289,10 +292,8 @@ const ServerContent = ({ serverAddress }) => {
             loading={loadingBackups}
             onBackupClick={handleBackupItemClick}
             onDeleteBackup={handleDeleteRequest}
-            onDownloadBackup={handleDownloadBackup}  
+            onDownloadBackup={handleDownloadBackup}
           />
-
-
         </section>
 
         <section className={`${styles.listColumn} ${styles.scheduleColumn}`}>
@@ -304,19 +305,18 @@ const ServerContent = ({ serverAddress }) => {
             onCancelSchedule={handleCancelSchedule}
           />
         </section>
-
       </div>
 
       <div className={styles.actions}>
-        <button 
-          onClick={handleBackupClick} 
+        <button
+          onClick={handleBackupClick}
           disabled={loadingBackup || restoreMode}
           className={restoreMode ? styles.disabledButton : ''}
         >
           {loadingBackup ? "Создание..." : "Создать бэкап"}
         </button>
 
-        <button 
+        <button
           onClick={() => restoreMode ? setRestoreMode(false) : setRestoreMode(true)}
           disabled={loadingRestore}
           className={restoreMode ? styles.cancelButton : ''}
@@ -324,7 +324,7 @@ const ServerContent = ({ serverAddress }) => {
           {restoreMode ? "Отмена" : "Восстановить"}
         </button>
 
-        <button 
+        <button
           onClick={() => setShowScheduleModal(true)}
           disabled={restoreMode || loadingSchedules}
           className={
@@ -334,10 +334,6 @@ const ServerContent = ({ serverAddress }) => {
           Настроить расписание
         </button>
       </div>
-
-
-
-
 
       <BackupCommentModal
         show={showCommentModal}
@@ -351,23 +347,23 @@ const ServerContent = ({ serverAddress }) => {
       />
 
       {showDeleteModal && (
-                  <DeleteConfirmModal
-                    backupName={backupToDelete}
-                    onCancel={() => {
-                      setShowDeleteModal(false);
-                      setBackupToDelete(null);
-                      setDeleteError(null);
-                    }}
-                    onConfirm={confirmDeleteBackup}
-                    isDeleting={deletingBackup}  // Передаем для блокировки кнопки только в модальном окне
-                    error={deleteError}
-                  />
-                )}
+        <DeleteConfirmModal
+          backupName={backupToDelete}
+          onCancel={() => {
+            setShowDeleteModal(false);
+            setBackupToDelete(null);
+            setDeleteError(null);
+          }}
+          onConfirm={confirmDeleteBackup}
+          isDeleting={deletingBackup}
+          error={deleteError}
+        />
+      )}
 
       {showScheduleModal && (
         <ScheduleModal
           onClose={() => setShowScheduleModal(false)}
-          onCreate={createSchedule} 
+          onCreate={createSchedule}
           loading={loadingSchedules}
         />
       )}
@@ -391,12 +387,7 @@ const ServerContent = ({ serverAddress }) => {
           backupName={selectedBackup}
         />
       )}
-
-
     </div>
-
-        
-
   );
 };
 
