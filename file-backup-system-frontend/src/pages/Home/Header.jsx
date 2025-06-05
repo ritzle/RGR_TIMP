@@ -279,12 +279,13 @@ const Header = () => {
       </header>
 
       {showProfile && (
-        <>
-          <div className={`${styles.overlay} ${isClosing ? styles.closing : ''}`}></div>
-          <div
-            ref={panelRef}
-            className={`${styles.profilePanel} ${isClosing ? styles.closing : ''}`}
-          >
+  <>
+    <div className={`${styles.overlay} ${isClosing ? styles.closing : ''}`} />
+    <div
+      ref={panelRef}
+      className={`${styles.profilePanel} ${isClosing ? styles.closing : styles.open}`}
+    >
+
             <div className={styles.panelContent}>
               <h3>Профиль</h3>
 

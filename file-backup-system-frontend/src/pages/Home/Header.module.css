@@ -75,7 +75,7 @@
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
   transform: translateX(100%);
   animation: slideIn 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-  z-index: 1000;
+  z-index: 999;
   color: white;
 }
 
@@ -88,7 +88,7 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(3px);
-  z-index: 999;
+  z-index: 998;
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -296,40 +296,54 @@
 
 
 
-
-/* Анимации */
-@keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+/* Исходное состояние панели (скрыта) */
+.profilePanel {
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  /* другие нужные стили */
 }
 
-@keyframes slideOut {
-  from { transform: translateX(0); }
-  to { transform: translateX(100%); }
+/* Показ панели */
+.profilePanel.open {
+  transform: translateX(0);
+  opacity: 1;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Заголовок и анимация подчеркивания */
+.panelContent h3 {
+  position: relative;
+  font-size: 1.5rem;
 }
 
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+.panelContent h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  background-color: #007bff;
+  width: 0;
+  transition: width 0.3s ease;
 }
 
-/* Медиа-запросы */
+/* Hover-эффект на ПК */
+.profilePanel:hover .panelContent h3::after {
+  width: 120px;
+}
+
+/* Медиа-запрос для мобильных — отключаем анимацию подчеркивания */
 @media (max-width: 768px) {
   .profilePanel {
     width: 280px;
     padding: 20px;
   }
-  
+
   .panelContent h3 {
     font-size: 1.3rem;
   }
-  
-  .profilePanel:hover .panelContent h3::after {
-    width: 80px;
+
+  .panelContent h3::after {
+    width: 0 !important;
   }
 }
